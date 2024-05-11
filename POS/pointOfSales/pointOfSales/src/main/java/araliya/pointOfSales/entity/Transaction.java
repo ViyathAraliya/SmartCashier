@@ -2,7 +2,7 @@ package araliya.pointOfSales.entity;
 
 import java.util.List;
 
-import araliya.embeddedIDs.Transaction_Item_ID;
+import araliya.pointOfSales.embeddedIDs.Transaction_Item_ID;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

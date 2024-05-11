@@ -17,11 +17,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class Catagory {
+public class ItemCategory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="catagoryID")
+    @Column(name="categoryID")
     private Long catagoryID;
 
     @Column(name="description")

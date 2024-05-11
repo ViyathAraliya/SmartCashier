@@ -4,14 +4,13 @@ package araliya.pointOfSales.entity;
 
 import java.util.List;
 
-import araliya.embeddedIDs.Item_Supplier_ID;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Transient;
 import lombok.Data;
@@ -25,12 +24,10 @@ public class Supplier {
     @Column(name="supplierID")
     private Long supplierID;
 
-    @ManyToOne
-    @JoinColumn(name="ItemID")
-    private Item itemID;
+    
 
     @Column(name="supplier_name")
-    private Integer name;
+    private String name;
 
     @Column(name="contactNo")
     private String contactNo;
@@ -42,8 +39,8 @@ public class Supplier {
     private String address;
 
     @Transient
-    @OneToMany(mappedBy = "Item_supplier",targetEntity = Item_Supplier.class)
-    private List<Item_Supplier> item_Suppliers;
+    @OneToMany(mappedBy = "Item_supplier",targetEntity = Supplier_Item.class)
+    private List<Supplier_Item> item_Suppliers;
     
 
 

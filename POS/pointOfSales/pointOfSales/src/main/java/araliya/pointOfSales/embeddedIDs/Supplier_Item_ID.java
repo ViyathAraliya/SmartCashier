@@ -1,4 +1,4 @@
-package araliya.embeddedIDs;
+package araliya.pointOfSales.embeddedIDs;
 
 import java.io.Serializable;
 
@@ -7,12 +7,15 @@ import araliya.pointOfSales.entity.Supplier;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Embeddable
-public class Item_Supplier_ID implements Serializable{
+@AllArgsConstructor
+@NoArgsConstructor
+public class Supplier_Item_ID implements Serializable{
 
   
      @ManyToOne

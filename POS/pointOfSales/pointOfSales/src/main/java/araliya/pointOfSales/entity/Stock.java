@@ -26,13 +26,13 @@ public class Stock {
     @Column(name="unit")
     private String unit;
 
-    @Column(name="qty_on_hand")
+    @Column(name="qty_on_hand", nullable = true)
     private Long qty_on_hand;
 
-    @Column(name="qty_already_ordered_by_customer")
-    private Long ordered_by_customer;
+    @Column(name="qty_already_ordered_by_customers", nullable = true)
+    private Long ordered_by_customers;
 
-    @Column(name="qty_available_for_sale")
+    @Column(name="qty_available_for_sale", nullable = true)
     private Long available_for_sale;
 
     /*@Column(name="qty_to_be_recieved")

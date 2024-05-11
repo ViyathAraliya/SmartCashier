@@ -25,17 +25,24 @@ public class Item {
     @Column(name="itemID")
     private Long itemID;
 
+    @Column(name="Item")
+    private String name;
+
+    @Column(name="unit")
+    private String unit;
+
     @ManyToOne
     @JoinColumn(name="catogryID")
-    private Catagory catagoryID;
+    private ItemCategory category;
 
+    @Transient
     @OneToOne
-    @JoinColumn(name = "stockID")
-    private Stock stockID;
+    @JoinColumn(name = "stock")
+    private Stock stock;
 
  @Transient
-    @OneToMany(mappedBy = "Item_supplier",targetEntity = Item_Supplier.class)
-    private List<Item_Supplier> item_Suppliers;
+    @OneToMany(mappedBy = "Item_supplier",targetEntity = Supplier_Item.class)
+    private List<Supplier_Item> supplier_Items;
 
     @Transient
     @OneToMany(mappedBy = "transaction_item", targetEntity = Transaction_Item.class)
