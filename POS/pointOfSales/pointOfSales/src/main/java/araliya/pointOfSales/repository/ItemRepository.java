@@ -6,4 +6,5 @@ import araliya.pointOfSales.entity.Item;
 
 public interface ItemRepository extends  JpaRepository<Item,Long>{
     Item findByName(String name);
+    boolean existsByName(String name);
 }
