@@ -36,8 +36,14 @@ public class ItemServiceImpl implements ItemService {
     @Autowired
     private Supplier_Item_Repository supplier_Item_Repository;
 
-    public String saveItem(ItemDto itemDto) throws Exception {// for new item
-     
+    public String saveItem(ItemDto itemDto) throws Exception {// for a new item,
+        //"If an item exists, then a stock exists; otherwise, there is no stock."
+        String itemName=itemDto.getName();
+        if(itemRepository.findByName(itemName)!=null){
+        
+            return "this item already exist";
+        }
+
         Item item = new Item();
        
 
@@ -53,6 +59,24 @@ public class ItemServiceImpl implements ItemService {
        //stock.setItem(item);
        
        System.out.println(0);
+       ItemCategory itemCategory = itemDto.getCategory();
+       String categoryName=itemCategory.getDescription();
+       
+       Long categoryID = itemCategory.getCatagoryID();
+        if (categoryID == null) {//new catogry
+            itemCategory = itemCatagoryRepository.save(itemCategory);
+            categoryID = itemCategory.getCatagoryID();
+            item.setCategory(itemCategory);
+        }
+        else{
+            if(itemCatagoryRepository.existsById(categoryID)){
+                
+               if(categoryName.equals(itemCatagoryRepository.findById(categoryID).orElse(null).getDescription())==false){
+                    return "categoryID does not match with the category name(description).send the category without id if you want to register a new category";
+               }
+            }
+        }
+
         item=itemRepository.save(item);
         stock.setItem(item);
         Stock savedStock = stockRepository.save(stock);
@@ -64,13 +88,7 @@ public class ItemServiceImpl implements ItemService {
         
         item.setStock(savedStock);
         System.out.println(3);
-        ItemCategory itemCategory = itemDto.getCategory();
-        Long categoryID = itemCategory.getCatagoryID();
-        if (categoryID == null) {//new catogry
-            itemCategory = itemCatagoryRepository.save(itemCategory);
-            categoryID = itemCategory.getCatagoryID();
-            item.setCategory(itemCategory);
-        }
+        
         System.out.println(4);
         if (itemCatagoryRepository.existsById(categoryID) == false) {//no cat by id
             return "a catogory with provided ID does not exist";
