@@ -17,13 +17,8 @@ import lombok.Data;
 public class Transaction_Item_ID implements Serializable {
 
   
-    @ManyToOne
-    @JoinColumn(name="transaction")
-    private Transaction transaction;
-
-    @ManyToOne
-    @JoinColumn(name="item")
-    private Item item;
+    private Long transactionID;
+    private Long itemID;
 
     
     

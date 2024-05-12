@@ -46,13 +46,11 @@ public class ItemServiceImpl implements ItemService {
         TransactionDefinition def = new DefaultTransactionDefinition();
         TransactionStatus status = transactionManager.getTransaction(def);
         try {
-        //Long h = Long.valueOf(1);
-        
-
             ItemCategory itemCategory = itemDto.getCategory();
+            
             Long categoryID = itemCategory.getCatagoryID();
-          
             String categoryName = itemCategory.getDescription();
+            
             Boolean categoryIdIsNull = categoryID == null;
 
             // validating dto
@@ -78,33 +76,25 @@ public class ItemServiceImpl implements ItemService {
                 return "no such category(by name). If you want to add this category, add it from category service ";
             }
             if (categoryIdIsNull) {
-               
-              
-              
-                
                 categoryID = itemCatagoryRepository.findByDescription(categoryName).getCatagoryID();
                 itemCategory.setCatagoryID(categoryID);
                 
             } else {
-            
-                System.out.println("cat id :"+categoryID);
-                System.out.print(77777);
                 Boolean noSuchCategoryByID = itemCatagoryRepository.existsById(categoryID)==false;
-                System.out.print(888);
                 if (noSuchCategoryByID) {
                     return "no such category(by id). Send without an id if you want to create a new category";
                 }
-                System.out.print(99);
+              ;
                 Boolean categoryIdMatchesName = categoryID == itemCatagoryRepository.findByDescription(categoryName)
                         .getCatagoryID();
-                        System.out.print(1010);
+                      
                 if (categoryIdMatchesName==false) {
                     return "categoryID does'nt match  category name";
                 }
             }
-            /*------------------------------------------------- */
-            /* _______validating and saving transient entities________ */
-            /*------validating and saving item-------*/
+      
+            //validating and saving transient entitie
+            //validating and saving item
             Item item = new Item();
 
             item.setName(itemName);
@@ -115,11 +105,8 @@ public class ItemServiceImpl implements ItemService {
             item.setCategory(category);
             item.setUnit(unit);
             item = itemRepository.save(item);
-            /*
-             * ___________validating and saving entities which are not contains transient in
-             * any instance
-             */
-            /*--------validating and saving stock------- */
+            //validating and saving entities which contains transient entities
+            //validating and saving stock
             stock = itemDto.getStock();
             Long stockID = stock.getStockID();
             if (stockID != null) {
@@ -133,10 +120,9 @@ public class ItemServiceImpl implements ItemService {
                 return "dont send the unit with stock. The business logic will assign the unit from item";
             }
             stock.setUnit(item.getUnit());
-            stock = stockRepository.save(stock);// no need to validate other attributes of stock because they are
-                                                // nullable
-
-            /*----validating and saving Supplier_Item--------  */
+            stock = stockRepository.save(stock);// no need to validate other attributes of stock because they are nullable                                       
+          
+            //validating and saving Supplier_Item
             Long supplierID = supplier.getSupplierID();
             boolean supplierIdIsNull = supplierID == null;
             boolean supplierExists;
@@ -148,7 +134,9 @@ public class ItemServiceImpl implements ItemService {
                 if (supplier.getEmail() == null || supplier.getAddress() == null || supplier.getContactNo() == null) {
                     return "lacking essential supplier details.";
                 }
+             
                 supplier = supplierRepository.save(supplier);
+           
 
             } else {
                 supplierExists = supplierRepository.existsById(supplierID);
@@ -157,9 +145,10 @@ public class ItemServiceImpl implements ItemService {
                 }
             }
 
-            Supplier_Item_ID supplier_Item_ID = new Supplier_Item_ID(item, supplier);
-            Supplier_Item supplier_Item = new Supplier_Item(supplier_Item_ID);
-            supplier_Item_Repository.save(supplier_Item);
+            Supplier_Item_ID supplier_Item_ID = new Supplier_Item_ID(item.getItemID(), supplier.getSupplierID());
+            Supplier_Item supplier_Item = new Supplier_Item(supplier_Item_ID,item,supplier); 
+            supplier_Item_Repository.save(supplier_Item);//this line error
+           
 
             transactionManager.commit(status);
             return "item saved succesfully";
