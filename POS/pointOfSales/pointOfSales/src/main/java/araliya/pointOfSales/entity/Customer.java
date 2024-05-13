@@ -23,6 +23,6 @@ public class Customer {//since designing app for an buisneess such as supermarke
     private String phoneNumber;
 
     @Transient
-    @OneToMany(mappedBy = "transaction",targetEntity=Customer.class)
-    private List<Customer> customers;
+    @OneToMany(mappedBy = "transaction",targetEntity=Transaction.class)
+    private List<Transaction> transactions;
 }

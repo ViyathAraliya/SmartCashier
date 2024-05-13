@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import araliya.pointOfSales.entity.Customer;
-import araliya.pointOfSales.entity.Transaction_Item;
+
 import lombok.Data;
 
 @Data

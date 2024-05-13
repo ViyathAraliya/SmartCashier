@@ -38,4 +38,6 @@ public class Transaction {
   @OneToMany(mappedBy = "transaction_item", targetEntity = Transaction_Item.class)
   private List<Transaction_Item> transaction_items;
 
+  
+
 }
