@@ -12,9 +12,6 @@ public class ItemDto {
   
     private Long itemID;
 
-    private TestDtos tesaDto;
-    
-
     private String name;
 
    

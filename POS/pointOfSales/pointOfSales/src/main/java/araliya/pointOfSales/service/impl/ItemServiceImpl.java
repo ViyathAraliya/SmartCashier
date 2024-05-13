@@ -46,109 +46,140 @@ public class ItemServiceImpl implements ItemService {
         TransactionDefinition def = new DefaultTransactionDefinition();
         TransactionStatus status = transactionManager.getTransaction(def);
         try {
-            ItemCategory itemCategory = itemDto.getCategory();
-            
-            Long categoryID = itemCategory.getCatagoryID();
-            String categoryName = itemCategory.getDescription();
-            
-            Boolean categoryIdIsNull = categoryID == null;
 
             // validating dto
             String itemName = itemDto.getName();
             String unit = itemDto.getUnit();
-            ItemCategory category = itemDto.getCategory();
+            ItemCategory itemCategory = itemDto.getCategory();
             Stock stock = itemDto.getStock();
             Supplier supplier = itemDto.getSupplier();
             Long qty = itemDto.getQty();
 
-            Object[] arr = { itemName, unit, category, stock, supplier, qty };
+            Object[] arr = { itemName, unit, itemCategory, stock, supplier, qty };
             for (int i = 0; i < arr.length; i++) {
                 if (arr[i] == null) {
-                    return "there is a null value in the dto. Please check the dto";
+                    throw  new Exception ("there is a null value in the dto. Please check the dto" );
                 }
             }
 
+            Long categoryID = itemCategory.getCatagoryID();
+            String categoryName = itemCategory.getDescription();
+
+            Boolean categoryIdIsNull = categoryID == null;
+            Boolean categoryNameIsNull = categoryName == null;
+            System.out.println("at id" + categoryID);
+
             // validating and saving category
-            Boolean noSuchCategoryByName= noSuchCategoryByName = itemCatagoryRepository.existsByDescription(categoryName) ==false;
-            
-             
-            if (noSuchCategoryByName) {
-                return "no such category(by name). If you want to add this category, add it from category service ";
+            boolean itemExistsByID = false;
+            if (categoryIdIsNull == false) {
+                itemExistsByID=itemCatagoryRepository.existsById(categoryID);
             }
+            boolean itemExistsByName = false;
+            if (categoryNameIsNull == false) {
+                itemExistsByName=itemCatagoryRepository.existsByDescription(categoryName);
+            }
+
+            ItemCategory itemCategoryFoundByDescription = null;
+            if (categoryNameIsNull == false) {
+                itemCategoryFoundByDescription=itemCatagoryRepository.findByDescription(categoryName);
+            }
+            ItemCategory itemCategoryFoundByID = null;
+            if (categoryIdIsNull == false) {
+                itemCategoryFoundByID=itemCatagoryRepository.findById(categoryID).orElse(null);
+            }
+            boolean itemCategoryFoundByIDisNull = itemCategoryFoundByID == null;
+
             if (categoryIdIsNull) {
-                categoryID = itemCatagoryRepository.findByDescription(categoryName).getCatagoryID();
-                itemCategory.setCatagoryID(categoryID);
-                
-            } else {
-                Boolean noSuchCategoryByID = itemCatagoryRepository.existsById(categoryID)==false;
-                if (noSuchCategoryByID) {
-                    return "no such category(by id). Send without an id if you want to create a new category";
+                if (categoryNameIsNull) {
+                    throw new Exception("both the categoryID and the categoryName are null");
                 }
-              ;
-                Boolean categoryIdMatchesName = categoryID == itemCatagoryRepository.findByDescription(categoryName)
-                        .getCatagoryID();
-                      
-                if (categoryIdMatchesName==false) {
-                    return "categoryID does'nt match  category name";
+                if (categoryNameIsNull == false) {
+                    if (itemExistsByName == false) {
+                        throw new Exception("no such category by provided name");
+                    }
+                    itemCategory = itemCategoryFoundByDescription;
+                    categoryID = itemCategoryFoundByID.getCatagoryID();
+                }
+            } else if (categoryNameIsNull) {
+                if (itemExistsByID) {
+                    itemCategory = itemCategoryFoundByID;
+                    if (itemCategoryFoundByIDisNull) {
+                        throw new Exception( "error in retriving item. t=retrivesnull by repo");
+                    }
+                    categoryName = itemCategory.getDescription();
+                } else {
+                    throw new Exception( "no such category by provided id");
+                }
+            } else if (itemExistsByID == false) {
+                throw new Exception("no such category by provided id");
+            } else if (itemExistsByName == false) {
+                throw new Exception("no such category by provided name");
+            } else {
+                itemCategory = itemCategoryFoundByID;
+                if (itemCategory == null) {
+                    throw new Exception("error in retriving categoru(repo returns null)");
+                }
+                if (itemCategory.getCatagoryID()
+                        .equals(itemCategoryFoundByDescription.getCatagoryID()) == false) {
+                    throw new Exception( "category ID doesnt match the category name");
                 }
             }
-      
-            //validating and saving transient entitie
-            //validating and saving item
+
+            // validating and saving transient entitie
+            // validating and saving item
             Item item = new Item();
 
             item.setName(itemName);
-            Boolean itemAlreadyExists = itemRepository.existsByName(itemName);
+            boolean itemAlreadyExists = itemRepository.existsByName(itemName);
             if (itemAlreadyExists) {
-                return "this item already exists";
+                throw new Exception("this item already exists");
             }
-            item.setCategory(category);
+            item.setCategory(itemCategory);
             item.setUnit(unit);
             item = itemRepository.save(item);
-            //validating and saving entities which contains transient entities
-            //validating and saving stock
+            // validating and saving entities which contains transient entities
+            // validating and saving stock
             stock = itemDto.getStock();
             Long stockID = stock.getStockID();
             if (stockID != null) {
-                return "a newly added item cannot already have a  stockID. Send the item without a stock ID the  buisness logic will assign a stockID and other attributes of stock";
+                throw new Exception("a newly added item cannot already have a  stockID. Send the item without a stock ID the  buisness logic will assign a stockID and other attributes of stock");
             }
             if (stock.getItem() != null) {
-                return "dont send the item with stock, the buisness logic will assign the item to stock";
+                throw new Exception("dont send the item with stock, the buisness logic will assign the item to stock");
             }
             stock.setItem(item);
             if (stock.getUnit() != null) {
-                return "dont send the unit with stock. The business logic will assign the unit from item";
+                throw new Exception("dont send the unit with stock. The business logic will assign the unit from item");
             }
             stock.setUnit(item.getUnit());
-            stock = stockRepository.save(stock);// no need to validate other attributes of stock because they are nullable                                       
-          
-            //validating and saving Supplier_Item
+            stock = stockRepository.save(stock);// no need to validate other attributes of stock because they are
+                                                // nullable
+
+            // validating and saving Supplier_Item
             Long supplierID = supplier.getSupplierID();
             boolean supplierIdIsNull = supplierID == null;
             boolean supplierExists;
             if (supplierIdIsNull) {
                 boolean nameExists = supplierRepository.existsByName(itemName);
                 if (nameExists) {
-                    return "a supplier is already registered with this name. Check from supplier service if the existing supplier is the right one and send supplier again with that id. Else register this supplier under a different name";
+                    throw new Exception("a supplier is already registered with this name. Check from supplier service if the existing supplier is the right one and send supplier again with that id. Else register this supplier under a different name");
                 }
                 if (supplier.getEmail() == null || supplier.getAddress() == null || supplier.getContactNo() == null) {
-                    return "lacking essential supplier details.";
+                    throw new Exception( "lacking essential supplier details.");
                 }
-             
+
                 supplier = supplierRepository.save(supplier);
-           
 
             } else {
                 supplierExists = supplierRepository.existsById(supplierID);
                 if (supplierExists == false) {
-                    return "A supplier with the given id does not exist";
+                    throw new Exception("A supplier with the given id does not exist");
                 }
             }
 
             Supplier_Item_ID supplier_Item_ID = new Supplier_Item_ID(item.getItemID(), supplier.getSupplierID());
-            Supplier_Item supplier_Item = new Supplier_Item(supplier_Item_ID,item,supplier); 
-            supplier_Item_Repository.save(supplier_Item);//this line error
-           
+            Supplier_Item supplier_Item = new Supplier_Item(supplier_Item_ID, item, supplier);
+            supplier_Item_Repository.save(supplier_Item);// this line error
 
             transactionManager.commit(status);
             return "item saved succesfully";
@@ -156,6 +187,11 @@ public class ItemServiceImpl implements ItemService {
         } catch (Exception ex) {
             transactionManager.rollback(status);
             throw ex;
+        }
+        finally{
+            if(!status.isCompleted()){
+                transactionManager.rollback(status);
+            }
         }
     }
 

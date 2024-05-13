@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 import araliya.pointOfSales.dtos.ItemDto;
-import araliya.pointOfSales.dtos.TestDtos;
-import araliya.pointOfSales.entity.Item;
 import araliya.pointOfSales.service.ItemService;
 
 import org.springframework.web.bind.annotation.PostMapping;

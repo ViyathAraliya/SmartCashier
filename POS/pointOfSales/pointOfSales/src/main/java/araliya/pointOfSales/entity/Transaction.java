@@ -1,5 +1,6 @@
 package araliya.pointOfSales.entity;
 
+import java.util.Date;
 import java.util.List;
 
 import araliya.pointOfSales.embeddedIDs.Transaction_Item_ID;
@@ -11,8 +12,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Transient;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 @Entity
 public class Transaction {
@@ -24,6 +29,8 @@ public class Transaction {
   @ManyToOne
   @JoinColumn(name = "customerID")
   private Customer customer;
+
+  private Date dateTime;
 
   private Long totalAmount;
 

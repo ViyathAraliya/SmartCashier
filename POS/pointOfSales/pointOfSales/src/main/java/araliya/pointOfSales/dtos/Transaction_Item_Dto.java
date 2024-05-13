@@ -1,7 +1,13 @@
 package araliya.pointOfSales.dtos;
 
-public class Transaction_Item_Dto {
-    private ItemDto itemDto;
-    //private
-    
+import lombok.Data;
+
+@Data
+public class Transaction_Item_dto {
+
+    private Long itemID;
+    //transactionID will be set in the service layer
+    private Long qty;
+    private Long amount;
+
 }
