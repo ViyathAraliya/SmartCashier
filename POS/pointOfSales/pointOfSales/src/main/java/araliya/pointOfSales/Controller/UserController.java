@@ -9,27 +9,26 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
-import araliya.pointOfSales.dtos.ItemDto;
-import araliya.pointOfSales.service.ItemService;
+import araliya.pointOfSales.entity.User;
+import araliya.pointOfSales.service.UserService;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @CrossOrigin(origins = "*")
-public class ItemController {
-
+public class UserController {
     @Autowired
-    private ItemService itemService;
+    private UserService userService;
 
-    @PostMapping("/saveItem") // save new item
-    public ResponseEntity<String> postMethodName(@RequestBody ItemDto itemDto) {
+    @PostMapping("/users")
+    public ResponseEntity<String> createUser(@RequestBody User user) {
         try {
-            String msg = itemService.saveItem(itemDto);
-            return ResponseEntity.ok(msg);
-            // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("failed
-            // to save item");
-
+            User savedUser = userService.createUser(user);
+            if (savedUser == null) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("error in saving User");
+            }
+         return   ResponseEntity.ok("user saved succesfully");
         } catch (Exception e) {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
@@ -39,6 +38,5 @@ public class ItemController {
         }
 
     }
-
 
 }
