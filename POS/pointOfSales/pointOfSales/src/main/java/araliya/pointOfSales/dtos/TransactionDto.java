@@ -12,7 +12,7 @@ import lombok.Data;
 public class TransactionDto {
     
     private Customer customer;
-    private List<Transaction_Item_dto> transaction_Item_dtos;//with transactionID null
+    private List<Transaction_Item_Dto> transaction_Item_dtos;//with transactionID null
     private  Date dateTime;
     private Long totalAmount;
     
