@@ -9,6 +9,6 @@ import araliya.pointOfSales.entity.ItemCategory;
 
 @Repository
 public interface ItemCatagoryRepository extends JpaRepository<ItemCategory,Long>{
-    ItemCategory findByDescription(String description);
-    boolean existsByDescription(String description);
+    ItemCategory findByName(String name);
+    boolean existsByName(String name);
 }

@@ -55,15 +55,26 @@ public class ItemServiceImpl implements ItemService {
             Supplier supplier = itemDto.getSupplier();
             Long qty = itemDto.getQty();
 
-            Object[] arr = { itemName, unit, itemCategory, stock, supplier, qty };
-            for (int i = 0; i < arr.length; i++) {
-                if (arr[i] == null) {
-                    throw  new Exception ("there is a null value in the dto. Please check the dto" );
-                }
+            if (itemName == null) {
+                throw new Exception("itemName is null in the DTO. Please check the DTO.");
             }
-
+            if (unit == null) {
+                throw new Exception("unit is null in the DTO. Please check the DTO.");
+            }
+            if (itemCategory == null) {
+                throw new Exception("itemCategory is null in the DTO. Please check the DTO.");
+            }
+            if (stock == null) {
+                throw new Exception("stock is null in the DTO. Please check the DTO.");
+            }
+            if (supplier == null) {
+                throw new Exception("supplier is null in the DTO. Please check the DTO.");
+            }
+            if (qty == null) {
+                throw new Exception("qty is null in the DTO. Please check the DTO.");
+            }
             Long categoryID = itemCategory.getCatagoryID();
-            String categoryName = itemCategory.getDescription();
+            String categoryName = itemCategory.getName();
 
             Boolean categoryIdIsNull = categoryID == null;
             Boolean categoryNameIsNull = categoryName == null;
@@ -76,12 +87,12 @@ public class ItemServiceImpl implements ItemService {
             }
             boolean itemExistsByName = false;
             if (categoryNameIsNull == false) {
-                itemExistsByName=itemCatagoryRepository.existsByDescription(categoryName);
+                itemExistsByName=itemCatagoryRepository.existsByName(categoryName);
             }
 
             ItemCategory itemCategoryFoundByDescription = null;
             if (categoryNameIsNull == false) {
-                itemCategoryFoundByDescription=itemCatagoryRepository.findByDescription(categoryName);
+                itemCategoryFoundByDescription=itemCatagoryRepository.findByName(categoryName);
             }
             ItemCategory itemCategoryFoundByID = null;
             if (categoryIdIsNull == false) {
@@ -106,7 +117,7 @@ public class ItemServiceImpl implements ItemService {
                     if (itemCategoryFoundByIDisNull) {
                         throw new Exception( "error in retriving item. t=retrivesnull by repo");
                     }
-                    categoryName = itemCategory.getDescription();
+                    categoryName = itemCategory.getName();
                 } else {
                     throw new Exception( "no such category by provided id");
                 }
@@ -141,17 +152,23 @@ public class ItemServiceImpl implements ItemService {
             // validating and saving stock
             stock = itemDto.getStock();
             Long stockID = stock.getStockID();
+            Long qtyOnHand=stock.getQty_on_hand();
+           
             if (stockID != null) {
                 throw new Exception("a newly added item cannot already have a  stockID. Send the item without a stock ID the  buisness logic will assign a stockID and other attributes of stock");
             }
             if (stock.getItem() != null) {
                 throw new Exception("dont send the item with stock, the buisness logic will assign the item to stock");
             }
+            if(qtyOnHand!=null){
+                throw new Exception("dont send the qty with stock when adding a new item. The buisness logic will determine qtyOnHand by itemDto");
+            }
             stock.setItem(item);
             if (stock.getUnit() != null) {
                 throw new Exception("dont send the unit with stock. The business logic will assign the unit from item");
             }
             stock.setUnit(item.getUnit());
+            stock.setQty_on_hand(qty);
             stock = stockRepository.save(stock);// no need to validate other attributes of stock because they are
                                                 // nullable
 

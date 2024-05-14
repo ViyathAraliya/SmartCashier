@@ -24,8 +24,8 @@ public class ItemCategory {
     @Column(name="categoryID")
     private Long catagoryID;
 
-    @Column(name="description")
-    private String description;
+    @Column(name="name")
+    private String name;
 
     @Transient
     @OneToMany(mappedBy = "item",targetEntity = Item.class)
