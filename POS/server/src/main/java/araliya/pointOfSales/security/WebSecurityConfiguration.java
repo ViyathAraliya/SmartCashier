@@ -1,4 +1,5 @@
-package araliya.pointOfSales.security.jwt;
+package araliya.pointOfSales.security;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +17,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import araliya.pointOfSales.security.UserDetailsServiceImpl;
+
+import araliya.pointOfSales.security.jwt.AuthEntryPoint;
+import araliya.pointOfSales.security.jwt.AuthTokenFilter;
 
 @Configuration
 @EnableMethodSecurity
@@ -61,7 +64,7 @@ public class WebSecurityConfiguration {
         httpSecurity.csrf(csrf ->csrf.disable())
         .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(unauthorizedHandler))
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authorizeHttpRequests(auth -> auth.requestMatchers("/users/**").permitAll()
+        .authorizeHttpRequests(auth -> auth.requestMatchers("auth/login/**").permitAll()
         .anyRequest().authenticated());
 
         httpSecurity.authenticationProvider(authenticationProvider());

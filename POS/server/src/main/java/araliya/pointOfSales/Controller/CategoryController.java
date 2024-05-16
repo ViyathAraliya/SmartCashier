@@ -11,8 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import araliya.pointOfSales.dtos.CategoryDto;
-import araliya.pointOfSales.dtos.ItemDto;
+
 import araliya.pointOfSales.entity.ItemCategory;
 import araliya.pointOfSales.service.CategoryService;
 
