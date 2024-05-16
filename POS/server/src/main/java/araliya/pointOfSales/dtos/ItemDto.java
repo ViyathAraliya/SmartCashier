@@ -17,6 +17,7 @@ public class ItemDto {
    
     private String unit;
 
+    private Long unitPrice;
     
     private ItemCategory category;
 

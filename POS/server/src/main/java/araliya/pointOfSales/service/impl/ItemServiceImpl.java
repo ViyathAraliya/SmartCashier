@@ -1,5 +1,7 @@
 package araliya.pointOfSales.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -41,6 +43,8 @@ public class ItemServiceImpl implements ItemService {
     @Autowired
     private Supplier_Item_Repository supplier_Item_Repository;
 
+
+
     public String saveItem(ItemDto itemDto) throws Exception {// for a new item,
         // "If an item exists, then a stock exists; otherwise, there is no stock."
         TransactionDefinition def = new DefaultTransactionDefinition();
@@ -50,6 +54,7 @@ public class ItemServiceImpl implements ItemService {
             // validating dto
             String itemName = itemDto.getName();
             String unit = itemDto.getUnit();
+            Long unitPrice=itemDto.getUnitPrice();
             ItemCategory itemCategory = itemDto.getCategory();
             Stock stock = itemDto.getStock();
             Supplier supplier = itemDto.getSupplier();
@@ -60,6 +65,9 @@ public class ItemServiceImpl implements ItemService {
             }
             if (unit == null) {
                 throw new Exception("unit is null in the DTO. Please check the DTO.");
+            }
+            if(unitPrice==null){
+                throw new Exception("unit price is null");
             }
             if (itemCategory == null) {
                 throw new Exception("itemCategory is null in the DTO. Please check the DTO.");
@@ -83,20 +91,20 @@ public class ItemServiceImpl implements ItemService {
             // validating and saving category
             boolean itemExistsByID = false;
             if (categoryIdIsNull == false) {
-                itemExistsByID=itemCatagoryRepository.existsById(categoryID);
+                itemExistsByID = itemCatagoryRepository.existsById(categoryID);
             }
             boolean itemExistsByName = false;
             if (categoryNameIsNull == false) {
-                itemExistsByName=itemCatagoryRepository.existsByName(categoryName);
+                itemExistsByName = itemCatagoryRepository.existsByName(categoryName);
             }
 
             ItemCategory itemCategoryFoundByDescription = null;
             if (categoryNameIsNull == false) {
-                itemCategoryFoundByDescription=itemCatagoryRepository.findByName(categoryName);
+                itemCategoryFoundByDescription = itemCatagoryRepository.findByName(categoryName);
             }
             ItemCategory itemCategoryFoundByID = null;
             if (categoryIdIsNull == false) {
-                itemCategoryFoundByID=itemCatagoryRepository.findById(categoryID).orElse(null);
+                itemCategoryFoundByID = itemCatagoryRepository.findById(categoryID).orElse(null);
             }
             boolean itemCategoryFoundByIDisNull = itemCategoryFoundByID == null;
 
@@ -115,11 +123,11 @@ public class ItemServiceImpl implements ItemService {
                 if (itemExistsByID) {
                     itemCategory = itemCategoryFoundByID;
                     if (itemCategoryFoundByIDisNull) {
-                        throw new Exception( "error in retriving item. t=retrivesnull by repo");
+                        throw new Exception("error in retriving item. t=retrivesnull by repo");
                     }
                     categoryName = itemCategory.getName();
                 } else {
-                    throw new Exception( "no such category by provided id");
+                    throw new Exception("no such category by provided id");
                 }
             } else if (itemExistsByID == false) {
                 throw new Exception("no such category by provided id");
@@ -132,7 +140,7 @@ public class ItemServiceImpl implements ItemService {
                 }
                 if (itemCategory.getCatagoryID()
                         .equals(itemCategoryFoundByDescription.getCatagoryID()) == false) {
-                    throw new Exception( "category ID doesnt match the category name");
+                    throw new Exception("category ID doesnt match the category name");
                 }
             }
 
@@ -147,21 +155,24 @@ public class ItemServiceImpl implements ItemService {
             }
             item.setCategory(itemCategory);
             item.setUnit(unit);
+            item.setUnitPrice(unitPrice);
             item = itemRepository.save(item);
             // validating and saving entities which contains transient entities
             // validating and saving stock
             stock = itemDto.getStock();
             Long stockID = stock.getStockID();
-            Long qtyOnHand=stock.getQty_on_hand();
-           
+            Long qtyOnHand = stock.getQty_on_hand();
+
             if (stockID != null) {
-                throw new Exception("a newly added item cannot already have a  stockID. Send the item without a stock ID the  buisness logic will assign a stockID and other attributes of stock");
+                throw new Exception(
+                        "a newly added item cannot already have a  stockID. Send the item without a stock ID the  buisness logic will assign a stockID and other attributes of stock");
             }
             if (stock.getItem() != null) {
                 throw new Exception("dont send the item with stock, the buisness logic will assign the item to stock");
             }
-            if(qtyOnHand!=null){
-                throw new Exception("dont send the qty with stock when adding a new item. The buisness logic will determine qtyOnHand by itemDto");
+            if (qtyOnHand != null) {
+                throw new Exception(
+                        "dont send the qty with stock when adding a new item. The buisness logic will determine qtyOnHand by itemDto");
             }
             stock.setItem(item);
             if (stock.getUnit() != null) {
@@ -179,10 +190,11 @@ public class ItemServiceImpl implements ItemService {
             if (supplierIdIsNull) {
                 boolean nameExists = supplierRepository.existsByName(itemName);
                 if (nameExists) {
-                    throw new Exception("a supplier is already registered with this name. Check from supplier service if the existing supplier is the right one and send supplier again with that id. Else register this supplier under a different name");
+                    throw new Exception(
+                            "a supplier is already registered with this name. Check from supplier service if the existing supplier is the right one and send supplier again with that id. Else register this supplier under a different name");
                 }
                 if (supplier.getEmail() == null || supplier.getAddress() == null || supplier.getContactNo() == null) {
-                    throw new Exception( "lacking essential supplier details.");
+                    throw new Exception("lacking essential supplier details.");
                 }
 
                 supplier = supplierRepository.save(supplier);
@@ -204,12 +216,38 @@ public class ItemServiceImpl implements ItemService {
         } catch (Exception ex) {
             transactionManager.rollback(status);
             throw ex;
-        }
-        finally{
-            if(!status.isCompleted()){
+        } finally {
+            if (!status.isCompleted()) {
                 transactionManager.rollback(status);
             }
         }
     }
 
+    public List<Item> loadItems(){
+        return itemRepository.findAll();
+    }
+
+    public String updateItem(ItemDto itemDto){
+        
+        try{
+            Item item=new Item();
+        item.setName(itemDto.getName());
+        item.setCategory(itemDto.getCategory());
+        item.setStock(itemDto.getStock());
+        item.setUnit(itemDto.getUnit());
+        item.setUnitPrice(itemDto.getUnitPrice());
+
+        
+
+        Item savedItem=itemRepository.save(item);
+        if(savedItem!=null){
+            return "item updated succesfully";
+        }
+        throw new Exception("failed to update item");
+    
+    }
+        catch(Exception e){
+                    throw new RuntimeException(e.getMessage());
+        }
+    }
 }

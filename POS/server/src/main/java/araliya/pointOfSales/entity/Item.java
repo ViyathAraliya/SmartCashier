@@ -31,6 +31,9 @@ public class Item {
     @Column(name="unit")
     private String unit;
 
+    @Column(name="unit_price")
+    private Long unitPrice;
+
     @ManyToOne
     @JoinColumn(name="catogryID")
     private ItemCategory category;
