@@ -24,7 +24,7 @@ public class ItemCategory {
     @Column(name="categoryID")
     private Long catagoryID;
 
-    @Column(name="name")
+    @Column(name="name",unique = true)
     private String name;
 
     @Transient

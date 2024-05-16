@@ -12,5 +12,5 @@ import araliya.pointOfSales.entity.Item;
 public interface ItemService {
     String saveItem(ItemDto itemDto) throws Exception;
     List<Item> loadItems();
-    String updateItem(ItemDto itemDto);
+    String updateItem(Item item);
 }

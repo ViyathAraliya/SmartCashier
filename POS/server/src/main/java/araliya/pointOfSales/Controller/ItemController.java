@@ -4,6 +4,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;
 
+import javax.swing.text.Style;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,13 +60,15 @@ public class ItemController {
         }
     }
 
-    @PutMapping("/updateItem/{id}")
-    public ResponseEntity<String> putMethodName(@PathVariable String id, @RequestBody ItemDto ItemDto) {
+    @PutMapping("/updateItems")
+    public ResponseEntity<String> putMethodName( @RequestBody Item item) {
        try{
-            String msg=itemService.updateItem(ItemDto);
+            String msg=itemService.updateItem(item);
+            System.out.println("fine");
             return ResponseEntity.ok().body(msg);
        }catch(Exception e){
             e.printStackTrace();
+            System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
        }
     }

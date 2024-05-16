@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 
 function Home() {
+  
+
     return (
       <div><label>Home</label>
       <li><Link to="/items">Items</Link></li>

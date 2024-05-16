@@ -227,27 +227,15 @@ public class ItemServiceImpl implements ItemService {
         return itemRepository.findAll();
     }
 
-    public String updateItem(ItemDto itemDto){
-        
-        try{
-            Item item=new Item();
-        item.setName(itemDto.getName());
-        item.setCategory(itemDto.getCategory());
-        item.setStock(itemDto.getStock());
-        item.setUnit(itemDto.getUnit());
-        item.setUnitPrice(itemDto.getUnitPrice());
+    public String updateItem(Item item){
 
+        System.out.println(item.getItemID());
         
+       if(itemRepository.save(item)!=null){
+        return "item update";
+       }
+       else{return "failed to update item";}
 
-        Item savedItem=itemRepository.save(item);
-        if(savedItem!=null){
-            return "item updated succesfully";
         }
-        throw new Exception("failed to update item");
     
-    }
-        catch(Exception e){
-                    throw new RuntimeException(e.getMessage());
-        }
-    }
 }
