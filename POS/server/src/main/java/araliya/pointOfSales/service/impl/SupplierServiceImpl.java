@@ -9,17 +9,20 @@ import org.springframework.stereotype.Service;
 import araliya.pointOfSales.entity.Supplier;
 import araliya.pointOfSales.entity.Supplier_Item;
 import araliya.pointOfSales.repository.SupplieRepository;
+import araliya.pointOfSales.service.SupplierService;
 import araliya.pointOfSales.service.Supplier_Item_Service;
 
 @Service
-public class SupplierServiceImpl {
+public class SupplierServiceImpl implements SupplierService{
 
     @Autowired
     private Supplier_Item_Service supplier_Item_Service;
 
     @Autowired
     private SupplieRepository supplieRepository;
-    public List<Supplier> getSuppliersByItem(Long itemID) throws Exception{
+   public List<Supplier> getSuppliersByItemID(Long itemID)  throws Exception
+   
+    {
         List<Supplier_Item> supplier_Items=supplier_Item_Service.loadSupplier_Items(itemID);
         List<Supplier> suppliers=new ArrayList<>();
         for(int i=0;i<supplier_Items.size();i++){

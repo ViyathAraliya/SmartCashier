@@ -8,5 +8,5 @@ import araliya.pointOfSales.entity.Supplier;
 
 @Service
 public interface SupplierService {
-    List<Supplier> getSuppliersByItemID(Long id)  throws Exception;
+    List<Supplier> getSuppliersByItemID(Long itemID)  throws Exception;
 }
