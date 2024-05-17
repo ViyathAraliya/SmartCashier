@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 function UserItems() {
 
@@ -94,7 +95,9 @@ function UserItems() {
                             {categories && categories.map((category) => (
                                 <option key={category.catagoryID} value={category.id}>{category.name}</option>
                             ))}</select></td>
-                            <td><button>suppliers</button></td>
+                            <td>
+                                <li><Link to={`/suppliers?itemID=${item.itemID}`}>Suppliers</Link>
+                                    </li></td>
                             <td><button onClick={()=>{
                                 updateItem(item);
                             }}>update</button></td>

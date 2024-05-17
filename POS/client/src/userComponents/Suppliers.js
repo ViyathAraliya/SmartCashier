@@ -1,52 +1,57 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
-function Suppliers(itemID){
-    const[suppliers, setSuppliers]=useState(null);
-   
+function Suppliers() {
+    const [suppliers, setSuppliers] = useState(null);
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const itemID = queryParams.get("itemID");
 
-    useEffect(()=>{
-        axios.get("http://localhost:8080/loadSuppliersByItem"+itemID)
-        .then(function(response){
-            setSuppliers(response.data)
-        })
-        .catch(function(error){
-            console.log(error)
-        })
-    })/*@Column(name="supplier_name")
-    private String name;
 
-    @Column(name="contactNo")
-    private String contactNo;
+    useEffect(() => {
+        console.log("item id: " + itemID);
+        axios.get(`http://localhost:8080/loadSupplier_Item/${itemID}`)
+            .then(function (response) {
+                setSuppliers(response.data)
+                console.log("respnose: " + suppliers == null)
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
+    }, [])
 
-    @Column(name="email")
-    private String email;
+const[f,setF]=useState(null);
+function handleF(){
+    setF(suppliers);
+}
 
-    @Column(name="address") */
 
-    return(<div>
+    return (<div>
+        <button onClick={()=>console.log(suppliers==null)}>gf</button>
         <table>
             <thead>
                 <tr>
-                    <th>supplierID</th>
+                    <th>Supplier ID</th>
                     <th>supplier name</th>
                     <th>contact_No</th>
                     <th>email</th>
                     <th>address</th>
                 </tr>
             </thead>
-        <tbody>
-            {suppliers && suppliers.map((supplier)=>(
-                <tr>
-                <td>{supplier.supplierID}</td>
-                <td>{supplier.name}</td>
-                <td>{supplier.contactNo}</td>
-                <td>{supplier.email}</td>
-                <td>{supplier.address}</td>
-                </tr>
-            ))}
-        </tbody>
-                    </table>
+            <tbody>
+                {suppliers && suppliers.map((supplier) => {console.log(supplier);return (
+                    
+                    <tr key={supplier.supplierID}>
+                        <td>{supplier.supplierID}</td>
+                        <td >{supplier.name}</td>
+                        <td>{supplier.contactNo}</td>
+                        <td>{supplier.email}</td>
+                        <td >{supplier.address}</td>
+                    </tr>
+                )})}
+            </tbody>
+        </table>
 
     </div>)
 }
