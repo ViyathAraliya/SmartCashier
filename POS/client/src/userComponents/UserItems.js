@@ -94,6 +94,7 @@ function UserItems() {
                             {categories && categories.map((category) => (
                                 <option key={category.catagoryID} value={category.id}>{category.name}</option>
                             ))}</select></td>
+                            <td><button>suppliers</button></td>
                             <td><button onClick={()=>{
                                 updateItem(item);
                             }}>update</button></td>
