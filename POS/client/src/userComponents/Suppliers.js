@@ -7,8 +7,9 @@ function Suppliers() {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const itemID = queryParams.get("itemID");
-
-
+    const [supplierID,setSupplierID]=useState(null);
+    
+    
     useEffect(() => {
         console.log("item id: " + itemID);
         axios.get(`http://localhost:8080/loadSupplier_Item/${itemID}`)
@@ -20,15 +21,35 @@ function Suppliers() {
                 console.log(error)
             })
     }, [])
+    function deleteSupplier_Item(event,supplierID){
+        handleSupplierID(supplierID);
+        handleSupplierDoesntProvideItem(event);
+        
+    }
 
-const[f,setF]=useState(null);
-function handleF(){
-    setF(suppliers);
+    function handleSupplierDoesntProvideItem(){
+        
+        console.log("item id "+itemID+"supplier id :"+supplierID)
+        axios.delete(`http://localhost:8080/supplierDoesntProvideThisItem?itemID=${itemID}&supplierID=${supplierID}`)
+        .then(function(respnose){
+            console.log(respnose)
+        })
+        .catch(function(error){
+            console.log(88888888)
+            console.log(error)
+        })
+    }
+   
+function handleSupplierID(supplierID){
+   
+    setSupplierID(supplierID)
 }
-
-
+function h(s){
+    console.log(s);
+}
+   
     return (<div>
-        <button onClick={()=>console.log(suppliers==null)}>gf</button>
+        <button onClick={() => console.log(suppliers == null)}>gf</button>
         <table>
             <thead>
                 <tr>
@@ -40,18 +61,25 @@ function handleF(){
                 </tr>
             </thead>
             <tbody>
-                {suppliers && suppliers.map((supplier) => {console.log(supplier);return (
-                    
-                    <tr key={supplier.supplierID}>
-                        <td>{supplier.supplierID}</td>
-                        <td >{supplier.name}</td>
-                        <td>{supplier.contactNo}</td>
-                        <td>{supplier.email}</td>
-                        <td >{supplier.address}</td>
-                    </tr>
-                )})}
+                {suppliers && suppliers.map((supplier) => {
+                    console.log(supplier); return (
+
+                        <tr key={supplier.supplierID}>
+                            <td><input value={supplier.supplierID} /></td>
+                            <td ><input value={supplier.name} /></td>
+                            <td><input value={supplier.contactNo} /></td>
+                            <td><input value={supplier.email} /></td>
+                            <td ><input value={supplier.address} /></td>
+                            <td><button onClick={(event)=>deleteSupplier_Item(event,supplier.supplierID)}>this supplier no longer provide this item</button></td>
+                           
+                        </tr>
+                    )
+                })}
             </tbody>
         </table>
+        <label>add new supplier</label>
+        <input value="enter supplierID "/>
+        <button>add</button>
 
     </div>)
 }

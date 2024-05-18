@@ -64,7 +64,7 @@ public class WebSecurityConfiguration {
         httpSecurity.csrf(csrf ->csrf.disable())
         .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(unauthorizedHandler))
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authorizeHttpRequests(auth -> auth.requestMatchers("auth/login/**","/loadItems","/loadCategories","/updateItems","http://localhost:8080/loadSuppliersByItem","loadSupplier_Item/{id}").permitAll()
+        .authorizeHttpRequests(auth -> auth.requestMatchers("auth/login/**","/loadItems","/loadCategories","/updateItems","/loadSuppliersByItem","loadSupplier_Item/{id}","/supplierDoesntProvideThisItem").permitAll()
         .anyRequest().authenticated());
 
         httpSecurity.authenticationProvider(authenticationProvider());

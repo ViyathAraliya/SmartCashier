@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import araliya.pointOfSales.embeddedIDs.Supplier_Item_ID;
 import araliya.pointOfSales.entity.Item;
+import araliya.pointOfSales.entity.Supplier;
 import araliya.pointOfSales.entity.Supplier_Item;
 import araliya.pointOfSales.repository.ItemRepository;
 import araliya.pointOfSales.repository.Supplier_Item_Repository;
@@ -31,4 +33,17 @@ public class Supplier_Item_ServiceImpl implements Supplier_Item_Service {
         return supplier_Item_Repository.findAllByItem(item);
     }
 
-}
+    @Override
+    public void deleteSupplier_Items(Supplier_Item_ID supplier_Item_ID) throws Exception {
+      Supplier_Item  supplier_item=supplier_Item_Repository.findById(supplier_Item_ID).orElse(null);
+      try{if(supplier_item==null){
+        System.out.println("reached here");
+        throw new Exception("couldnt retriev supplier from repository");
+      }
+     supplier_Item_Repository.delete(supplier_item);
+    }catch(Exception e)
+    {
+        System.out.println(e);
+    }
+
+}}
