@@ -23,23 +23,27 @@ function Suppliers() {
     }, [])
     function deleteSupplier_Item(event,supplierID){
         handleSupplierID(supplierID);
-        handleSupplierDoesntProvideItem(event);
+        handleSupplierDoesntProvideItem(event,itemID,supplierID);
         
     }
 
-    function handleSupplierDoesntProvideItem(){
+    function handleSupplierDoesntProvideItem(event, itemID, supplierID) {
+        event.preventDefault();
         
-        console.log("item id "+itemID+"supplier id :"+supplierID)
-        axios.delete(`http://localhost:8080/supplierDoesntProvideThisItem?itemID=${itemID}&supplierID=${supplierID}`)
-        .then(function(respnose){
-            console.log(respnose)
-        })
-        .catch(function(error){
-            console.log(88888888)
-            console.log(error)
-        })
+        const data = {
+            "itemID": itemID,
+            "supplierID": supplierID
+        };
+    console.log("item id : "+itemID+"supplierID :"+supplierID)
+        axios.delete("http://localhost:8080/supplierDoesntProvideThisItem", {data: data})
+            .then(function(response) {
+                console.log(response);
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
     }
-   
+    
 function handleSupplierID(supplierID){
    
     setSupplierID(supplierID)
