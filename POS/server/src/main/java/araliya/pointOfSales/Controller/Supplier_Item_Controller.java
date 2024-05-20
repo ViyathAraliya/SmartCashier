@@ -42,9 +42,9 @@ public class Supplier_Item_Controller {
     @DeleteMapping("supplierDoesntProvideThisItem")
     public ResponseEntity<Void> deleteSupplier_Items(@RequestBody Supplier_Item_ID supplier_Item_ID) {
         try {
-            System.out.print(99);
+           
             supplier_Item_Service.deleteSupplier_Items(supplier_Item_ID);
-            System.out.println(99999);
+            ;
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
             System.out.println(e.getMessage());

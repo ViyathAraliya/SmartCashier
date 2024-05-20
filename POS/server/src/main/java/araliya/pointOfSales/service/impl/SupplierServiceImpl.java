@@ -36,6 +36,10 @@ public class SupplierServiceImpl implements SupplierService{
             return suppliers;
         }
 
+    public Supplier findByName(String name) throws Exception{
+        return supplieRepository.findByName(name);
+    }
+
     }
     
 

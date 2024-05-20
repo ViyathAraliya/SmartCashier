@@ -7,11 +7,13 @@ function Suppliers() {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const itemID = queryParams.get("itemID");
-    const [supplierID,setSupplierID]=useState(null);
+    const [deletePerformed,setDeletePerformed]=useState(0);
+    const [nameToBeSearched,setNameToBeSearched]=useState(null);
+    const [searchedSupplier, setSearchedSupplier]=useState(null);
     
     
     useEffect(() => {
-        console.log("item id: " + itemID);
+        
         axios.get(`http://localhost:8080/loadSupplier_Item/${itemID}`)
             .then(function (response) {
                 setSuppliers(response.data)
@@ -20,10 +22,16 @@ function Suppliers() {
             .catch(function (error) {
                 console.log(error)
             })
-    }, [])
+    }, [deletePerformed])
+
+    
+
     function deleteSupplier_Item(event,supplierID){
-        handleSupplierID(supplierID);
+        event.preventDefault();
+       
         handleSupplierDoesntProvideItem(event,itemID,supplierID);
+        setDeletePerformed(deletePerformed+1);
+        console.log("dp : "+deletePerformed)
         
     }
 
@@ -44,13 +52,25 @@ function Suppliers() {
             });
     }
     
-function handleSupplierID(supplierID){
-   
-    setSupplierID(supplierID)
-}
-function h(s){
-    console.log(s);
-}
+    function handleNameToBeSearched(event){
+       setNameToBeSearched(event.target.value);
+    }
+
+    function handleSearchedSupplier(event){
+        event.preventDefault();
+        axios.get(`http://localhost:8080/findSupplierByName/${nameToBeSearched}`).
+        then(function(respnose){
+            console.log(respnose);
+            setSearchedSupplier(respnose.data)
+        })
+        .catch(function(error){
+            console.log(error);
+        })
+
+    }
+    function inputChange(){}
+
+
    
     return (<div>
         <button onClick={() => console.log(suppliers == null)}>gf</button>
@@ -69,11 +89,11 @@ function h(s){
                     console.log(supplier); return (
 
                         <tr key={supplier.supplierID}>
-                            <td><input value={supplier.supplierID} /></td>
-                            <td ><input value={supplier.name} /></td>
-                            <td><input value={supplier.contactNo} /></td>
-                            <td><input value={supplier.email} /></td>
-                            <td ><input value={supplier.address} /></td>
+                            <td><label>{supplier.supplierID} </label></td>
+                            <td ><input value={supplier.name} onChange={inputChange}/></td>
+                            <td><input value={supplier.contactNo} onChange={inputChange}/></td>
+                            <td><input value={supplier.email} onChange={inputChange}/></td>
+                            <td ><input value={supplier.address} onChange={inputChange} /></td>
                             <td><button onClick={(event)=>deleteSupplier_Item(event,supplier.supplierID)}>this supplier no longer provide this item</button></td>
                            
                         </tr>
@@ -81,10 +101,15 @@ function h(s){
                 })}
             </tbody>
         </table>
-        <label>add new supplier</label>
-        <input value="enter supplierID "/>
-        <button>add</button>
-
+        <div>
+        <label>add an existing supplier</label>
+        <input  placeholder="Search By Name" onChange={handleNameToBeSearched}/>
+        <button onClick={handleSearchedSupplier}>search</button>
+        {searchedSupplier && <div>
+        <label>{searchedSupplier.name}</label><br></br>
+        <label>{searchedSupplier.contactNo}</label><br></br>
+        <label>{searchedSupplier.email}</label><br></br>
+        <label>{searchedSupplier.address}</label>  </div> }             </div>
     </div>)
 }
 

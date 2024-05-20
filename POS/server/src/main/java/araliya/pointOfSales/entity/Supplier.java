@@ -26,7 +26,7 @@ public class Supplier {
 
     
 
-    @Column(name="supplier_name")
+    @Column(name="supplier_name",unique = true)
     private String name;
 
     @Column(name="contactNo")

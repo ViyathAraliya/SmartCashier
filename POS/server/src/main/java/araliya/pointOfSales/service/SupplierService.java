@@ -9,4 +9,5 @@ import araliya.pointOfSales.entity.Supplier;
 @Service
 public interface SupplierService {
     List<Supplier> getSuppliersByItemID(Long itemID)  throws Exception;
+    Supplier findByName(String name) throws Exception;
 }

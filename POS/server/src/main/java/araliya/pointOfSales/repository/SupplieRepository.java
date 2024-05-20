@@ -9,4 +9,5 @@ import araliya.pointOfSales.entity.Supplier;
 public interface SupplieRepository extends JpaRepository<Supplier,Long>{
 
      boolean existsByName(String name);
+     Supplier findByName(String name);
 } 
