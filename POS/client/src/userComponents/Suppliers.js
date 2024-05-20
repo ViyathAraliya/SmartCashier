@@ -2,6 +2,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
+
+
 function Suppliers() {
     const [suppliers, setSuppliers] = useState(null);
     const location = useLocation();
@@ -11,27 +13,30 @@ function Suppliers() {
     const [nameToBeSearched,setNameToBeSearched]=useState(null);
     const [searchedSupplier, setSearchedSupplier]=useState(null);
     
-    
+
     useEffect(() => {
         
         axios.get(`http://localhost:8080/loadSupplier_Item/${itemID}`)
             .then(function (response) {
                 setSuppliers(response.data)
+
                 console.log("respnose: " + suppliers == null)
             })
             .catch(function (error) {
                 console.log(error)
             })
-    }, [deletePerformed])
-
+            console.log("delet pe"+deletePerformed);
+    }, [])
+    
     
 
     function deleteSupplier_Item(event,supplierID){
         event.preventDefault();
        
         handleSupplierDoesntProvideItem(event,itemID,supplierID);
-        setDeletePerformed(deletePerformed+1);
-        console.log("dp : "+deletePerformed)
+       
+        setDeletePerformed(prevDeletePerformed => prevDeletePerformed + 1);
+       
         
     }
 
@@ -42,6 +47,8 @@ function Suppliers() {
             "itemID": itemID,
             "supplierID": supplierID
         };
+
+        
     console.log("item id : "+itemID+"supplierID :"+supplierID)
         axios.delete("http://localhost:8080/supplierDoesntProvideThisItem", {data: data})
             .then(function(response) {
@@ -50,8 +57,36 @@ function Suppliers() {
             .catch(function(error) {
                 console.log(error);
             });
+            setSuppliers(null);
+    }
+
+    function addSearchedSupplierToItem(event){
+        event.preventDefault();
+        const data={
+            "supplier_Item_ID":{
+                "itemID":itemID,
+                "supplierID":searchedSupplier.supplierID
+            }
+        }
+
+        axios.post("http://localhost:8080/saveSupplier_Item",data)
+        .then(function(respnose){
+            console.log(respnose)
+        })
+        .catch(function(error){
+            console.log(error)
+        })
+        if(suppliers==null){
+        
+        setSuppliers([searchedSupplier])}
+        else{
+            setSuppliers(prevSuppliers=>[...prevSuppliers, searchedSupplier])
+        }
+     
+        
     }
     
+   
     function handleNameToBeSearched(event){
        setNameToBeSearched(event.target.value);
     }
@@ -106,10 +141,15 @@ function Suppliers() {
         <input  placeholder="Search By Name" onChange={handleNameToBeSearched}/>
         <button onClick={handleSearchedSupplier}>search</button>
         {searchedSupplier && <div>
+            
         <label>{searchedSupplier.name}</label><br></br>
         <label>{searchedSupplier.contactNo}</label><br></br>
         <label>{searchedSupplier.email}</label><br></br>
-        <label>{searchedSupplier.address}</label>  </div> }             </div>
+        <label>{searchedSupplier.address}</label>  </div> }  
+        <button  onClick={addSearchedSupplierToItem}>add</button>           </div>
+        <h2 style={{ color: "red" }}>Refresh manually to see changes</h2>
+
+
     </div>)
 }
 

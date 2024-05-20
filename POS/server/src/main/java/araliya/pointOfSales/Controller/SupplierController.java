@@ -10,6 +10,10 @@ import araliya.pointOfSales.entity.Supplier;
 import araliya.pointOfSales.service.SupplierService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 
 
 
@@ -34,6 +38,21 @@ public class SupplierController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @PostMapping("/addNewSupplier")
+    public ResponseEntity<Supplier> postMethodName(@RequestBody Supplier supplier) {
+        try{
+        Supplier savedSupplier=supplierService.savSupplier(supplier);
+        if(savedSupplier==null){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        return ResponseEntity.ok().body(savedSupplier);
+    }catch(Exception e){
+        System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
     
     
+    
+}
 }

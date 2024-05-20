@@ -13,5 +13,6 @@ public interface Supplier_Item_Service {
 
     List<Supplier_Item> loadSupplier_Items(Long itemID) throws Exception;
     void deleteSupplier_Items(Supplier_Item_ID supplier_Item_ID) throws Exception;
+    Supplier_Item saveSupplier_Item(Supplier_Item supplier_Item) throws Exception;
     
 } 

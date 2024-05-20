@@ -40,6 +40,10 @@ public class SupplierServiceImpl implements SupplierService{
         return supplieRepository.findByName(name);
     }
 
+    public Supplier savSupplier(Supplier supplier) throws Exception{
+        return supplieRepository.save(supplier);
+    }
+
     }
     
 

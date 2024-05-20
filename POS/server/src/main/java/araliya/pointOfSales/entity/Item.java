@@ -44,7 +44,7 @@ public class Item {
     private Stock stock;
 
  @Transient
-    @OneToMany(mappedBy = "Item_supplier",targetEntity = Supplier_Item.class)
+    @OneToMany(mappedBy = "supplier_item",targetEntity = Supplier_Item.class)
     private List<Supplier_Item> supplier_Items;
 
     @Transient

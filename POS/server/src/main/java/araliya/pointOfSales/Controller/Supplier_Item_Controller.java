@@ -11,13 +11,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import araliya.pointOfSales.embeddedIDs.Supplier_Item_ID;
 import araliya.pointOfSales.entity.Supplier;
-
+import araliya.pointOfSales.entity.Supplier_Item;
 import araliya.pointOfSales.service.SupplierService;
 import araliya.pointOfSales.service.Supplier_Item_Service;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PostMapping;
+
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -51,5 +53,23 @@ public class Supplier_Item_Controller {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @PostMapping("saveSupplier_Item")
+    public ResponseEntity<Supplier_Item> postMethodName(@RequestBody Supplier_Item supplier_Item) {
+        
+        try{
+            Supplier_Item savedSupplier=supplier_Item_Service.saveSupplier_Item(supplier_Item);
+            if(savedSupplier==null){
+                return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
+            }
+            return ResponseEntity.ok().body(savedSupplier);
+        }
+
+        catch(Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+
+        }
+    }
+    
 
 }
