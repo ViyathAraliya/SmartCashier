@@ -8,11 +8,43 @@ function Suppliers() {
     const [suppliers, setSuppliers] = useState(null);
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
+
     const itemID = queryParams.get("itemID");
 
     const [nameToBeSearched, setNameToBeSearched] = useState(null);
     const [searchedSupplier, setSearchedSupplier] = useState(null);
+    const [addNewSupplier, setAddNewSupplier] = useState(false);
+    const [createdSupplier, setCreatedSupplier] = useState(null);
 
+    const [name, setName] = useState(null);
+    const [contactNo, setContactNo] = useState(null);
+    const [email, setEmail] = useState(null);
+    const [address, setAddress] = useState(null);
+
+
+    const handleName = (event) => {
+        setName(event.target.value);
+    }
+
+    const handleContactNo = (event) => {
+        setContactNo(event.target.value);
+    }
+
+    const handleEmail = (event) => {
+        setEmail(event.target.value);
+    }
+
+    const handleAddress = (event) => {
+        setAddress(event.target.value);
+    }
+    function handleAddNewSupplier() {
+        setAddNewSupplier(true)
+    }
+
+
+    function removeSupplierById(id) {
+        setSuppliers(prevSuppliers => prevSuppliers.filter(supplier => supplier.supplierID !== id));
+    }
 
     useEffect(() => {
 
@@ -48,7 +80,8 @@ function Suppliers() {
         axios.delete("http://localhost:8080/supplierDoesntProvideThisItem", { data: data })
             .then(function (response) {
                 console.log(response);
-                setSuppliers(null);
+                removeSupplierById(supplierID)
+
             })
             .catch(function (error) {
                 console.log(error);
@@ -58,6 +91,16 @@ function Suppliers() {
 
     function addSearchedSupplierToItem(event) {
         event.preventDefault();
+        let a = 0;
+        if (suppliers != null) {
+            for (a = 0; a < suppliers.length; a++) {
+                if (suppliers[a].supplierID == searchedSupplier.supplierID) {
+                    console.log("supplier already added for this item")
+                    return;
+                }
+            }
+
+        }
         const data = {
             "supplier_Item_ID": {
                 "itemID": itemID,
@@ -102,6 +145,25 @@ function Suppliers() {
             })
 
     }
+
+    function handleCreateSupplier(event) {
+        console.log(5)
+        event.preventDefault();
+        const data = {
+            "name": name,
+            "contactNo": contactNo,
+            "email": email,
+            "address": address,
+        }
+
+        axios.post("http://localhost:8080/addNewSupplier",data)
+        .then(function(response){
+            console.log(response)
+        }).catch(function(error){
+            console.log(error)
+        })
+
+    }
     function inputChange() { }
 
 
@@ -120,7 +182,8 @@ function Suppliers() {
             </thead>
             <tbody>
                 {suppliers && suppliers.map((supplier) => {
-                    console.log(supplier); return (
+
+                    return (
 
                         <tr key={supplier.supplierID}>
                             <td><label>{supplier.supplierID} </label></td>
@@ -139,14 +202,30 @@ function Suppliers() {
             <label>add an existing supplier</label>
             <input placeholder="Search By Name" onChange={handleNameToBeSearched} />
             <button onClick={handleSearchedSupplier}>search</button>
-            {searchedSupplier && <div>
+            <br></br>
+            {searchedSupplier ? (<div>
 
                 <label>{searchedSupplier.name}</label><br></br>
                 <label>{searchedSupplier.contactNo}</label><br></br>
                 <label>{searchedSupplier.email}</label><br></br>
-                <label>{searchedSupplier.address}</label>  </div>}
-            <button onClick={addSearchedSupplierToItem}>add</button>           </div>
-       
+                <label>{searchedSupplier.address}</label>  </div>) : (
+                <label>supplier not found</label>
+            )}
+
+            <button onClick={addSearchedSupplierToItem}>add</button>
+        </div>
+        <div><br></br>
+            <button onClick={handleAddNewSupplier}>create a new supplier</button><button onClick={handleCreateSupplier}>add this supplier</button>
+            {addNewSupplier &&
+                <>
+                    <label>name</label>
+                    <input onChange={handleName} /><br></br>
+                    <label>contactNo</label><input onChange={handleContactNo} /><br></br>
+                    <label>email</label><input onChange={handleEmail} /><br></br>
+                    <label>address</label><input onChange={handleAddress} />
+
+                </>}
+        </div>
 
 
     </div>)
