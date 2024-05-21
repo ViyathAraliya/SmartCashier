@@ -9,104 +9,103 @@ function Suppliers() {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const itemID = queryParams.get("itemID");
-    const [deletePerformed,setDeletePerformed]=useState(0);
-    const [nameToBeSearched,setNameToBeSearched]=useState(null);
-    const [searchedSupplier, setSearchedSupplier]=useState(null);
-    
+
+    const [nameToBeSearched, setNameToBeSearched] = useState(null);
+    const [searchedSupplier, setSearchedSupplier] = useState(null);
+
 
     useEffect(() => {
-        
+
         axios.get(`http://localhost:8080/loadSupplier_Item/${itemID}`)
             .then(function (response) {
                 setSuppliers(response.data)
 
-                console.log("respnose: " + suppliers == null)
+
             })
             .catch(function (error) {
                 console.log(error)
             })
-            console.log("delet pe"+deletePerformed);
-    }, [])
-    
-    
 
-    function deleteSupplier_Item(event,supplierID){
+    }, [])
+
+
+
+    function deleteSupplier_Item(event, supplierID) {
         event.preventDefault();
-       
-        handleSupplierDoesntProvideItem(event,itemID,supplierID);
-       
-        setDeletePerformed(prevDeletePerformed => prevDeletePerformed + 1);
-       
-        
+        handleSupplierDoesntProvideItem(event, itemID, supplierID);
     }
 
     function handleSupplierDoesntProvideItem(event, itemID, supplierID) {
         event.preventDefault();
-        
+
         const data = {
             "itemID": itemID,
             "supplierID": supplierID
         };
 
-        
-    console.log("item id : "+itemID+"supplierID :"+supplierID)
-        axios.delete("http://localhost:8080/supplierDoesntProvideThisItem", {data: data})
-            .then(function(response) {
+
+        console.log("item id : " + itemID + "supplierID :" + supplierID)
+        axios.delete("http://localhost:8080/supplierDoesntProvideThisItem", { data: data })
+            .then(function (response) {
                 console.log(response);
+                setSuppliers(null);
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.log(error);
             });
-            setSuppliers(null);
+
     }
 
-    function addSearchedSupplierToItem(event){
+    function addSearchedSupplierToItem(event) {
         event.preventDefault();
-        const data={
-            "supplier_Item_ID":{
-                "itemID":itemID,
-                "supplierID":searchedSupplier.supplierID
+        const data = {
+            "supplier_Item_ID": {
+                "itemID": itemID,
+                "supplierID": searchedSupplier.supplierID
             }
         }
 
-        axios.post("http://localhost:8080/saveSupplier_Item",data)
-        .then(function(respnose){
-            console.log(respnose)
-        })
-        .catch(function(error){
-            console.log(error)
-        })
-        if(suppliers==null){
-        
-        setSuppliers([searchedSupplier])}
-        else{
-            setSuppliers(prevSuppliers=>[...prevSuppliers, searchedSupplier])
-        }
-     
-        
-    }
-    
-   
-    function handleNameToBeSearched(event){
-       setNameToBeSearched(event.target.value);
+        axios.post("http://localhost:8080/saveSupplier_Item", data)
+            .then(function (respnose) {
+                console.log(respnose)
+                if (suppliers == null) {
+
+                    setSuppliers([searchedSupplier])
+                }
+                else {
+                    setSuppliers(prevSuppliers => [...prevSuppliers, searchedSupplier])
+                }
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
+
+
+
     }
 
-    function handleSearchedSupplier(event){
+
+    function handleNameToBeSearched(event) {
+        setNameToBeSearched(event.target.value);
+    }
+
+    function handleSearchedSupplier(event) {
         event.preventDefault();
         axios.get(`http://localhost:8080/findSupplierByName/${nameToBeSearched}`).
-        then(function(respnose){
-            console.log(respnose);
-            setSearchedSupplier(respnose.data)
-        })
-        .catch(function(error){
-            console.log(error);
-        })
+            then(function (respnose) {
+                console.log(respnose);
+                setSearchedSupplier(respnose.data)
+            })
+            .catch(function (error) {
+                console.log(error);
+                setSearchedSupplier(null)
+            })
 
     }
-    function inputChange(){}
+    function inputChange() { }
 
 
-   
+
     return (<div>
         <button onClick={() => console.log(suppliers == null)}>gf</button>
         <table>
@@ -125,29 +124,29 @@ function Suppliers() {
 
                         <tr key={supplier.supplierID}>
                             <td><label>{supplier.supplierID} </label></td>
-                            <td ><input value={supplier.name} onChange={inputChange}/></td>
-                            <td><input value={supplier.contactNo} onChange={inputChange}/></td>
-                            <td><input value={supplier.email} onChange={inputChange}/></td>
+                            <td ><input value={supplier.name} onChange={inputChange} /></td>
+                            <td><input value={supplier.contactNo} onChange={inputChange} /></td>
+                            <td><input value={supplier.email} onChange={inputChange} /></td>
                             <td ><input value={supplier.address} onChange={inputChange} /></td>
-                            <td><button onClick={(event)=>deleteSupplier_Item(event,supplier.supplierID)}>this supplier no longer provide this item</button></td>
-                           
+                            <td><button onClick={(event) => deleteSupplier_Item(event, supplier.supplierID)}>this supplier no longer provide this item</button></td>
+
                         </tr>
                     )
                 })}
             </tbody>
         </table>
         <div>
-        <label>add an existing supplier</label>
-        <input  placeholder="Search By Name" onChange={handleNameToBeSearched}/>
-        <button onClick={handleSearchedSupplier}>search</button>
-        {searchedSupplier && <div>
-            
-        <label>{searchedSupplier.name}</label><br></br>
-        <label>{searchedSupplier.contactNo}</label><br></br>
-        <label>{searchedSupplier.email}</label><br></br>
-        <label>{searchedSupplier.address}</label>  </div> }  
-        <button  onClick={addSearchedSupplierToItem}>add</button>           </div>
-        <h2 style={{ color: "red" }}>Refresh manually to see changes</h2>
+            <label>add an existing supplier</label>
+            <input placeholder="Search By Name" onChange={handleNameToBeSearched} />
+            <button onClick={handleSearchedSupplier}>search</button>
+            {searchedSupplier && <div>
+
+                <label>{searchedSupplier.name}</label><br></br>
+                <label>{searchedSupplier.contactNo}</label><br></br>
+                <label>{searchedSupplier.email}</label><br></br>
+                <label>{searchedSupplier.address}</label>  </div>}
+            <button onClick={addSearchedSupplierToItem}>add</button>           </div>
+       
 
 
     </div>)
