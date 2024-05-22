@@ -8,6 +8,7 @@ function Home() {
       <li><Link to="/items">Items</Link></li>
       <li><Link to="/userItems">Access Items</Link></li>
       <li><Link to=""></Link></li>
+      <li><Link to="/item">create Item</Link></li>
       </div>
     );
   }

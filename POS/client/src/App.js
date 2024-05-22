@@ -6,6 +6,7 @@ import Home from './customerComponents/Home';
 import Items from './customerComponents/Items';
 import UserItems from './userComponents/UserItems';
 import Suppliers from './userComponents/Suppliers';
+import Item from './userComponents/Item';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
        <Route path="/items" element={<Items/>}/>
        <Route path="/userItems" element={<UserItems/>}/>
        <Route path="/suppliers" element={<Suppliers/>}/>
+       <Route path="/Item" element={<Item/>}/>
        </Routes>
        </BrowserRouter>
     </div>
