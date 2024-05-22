@@ -44,6 +44,7 @@ public class ItemController {
             PrintWriter pw = new PrintWriter(sw);
             e.printStackTrace(pw);
             String stackTrace = sw.toString();
+            System.out.println(stackTrace);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(stackTrace);
         }
 
