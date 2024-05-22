@@ -48,11 +48,13 @@ function UserItems() {
         
         console.log("itemID" +item.itemID);
         const data={
-        itemID: item.itemID,
-        name: item.name,
-        unit: unit,
-        unitPrice: unitPrice,
-        category: category
+        "itemID": item.itemID,
+        "name": item.name,
+        "unit": unit,
+        "unitPrice": unitPrice,
+        "category": {"categoryID":category.catagoryID,
+            "name":category.name
+        }
 
     }
         
@@ -93,7 +95,7 @@ function UserItems() {
                         <td><select onChange={handleCategory}>
                             <option value={item.category?.catagoryID}>{item.category?.name}</option>
                             {categories && categories.map((category) => (
-                                <option key={category.catagoryID} value={category.id}>{category.name}</option>
+                                <option key={category.categoryID} value={category.id}>{category.name}</option>
                             ))}</select></td>
                             <td>
                                 <li><Link to={`/suppliers?itemID=${item.itemID}`}>Suppliers</Link>

@@ -1,0 +1,63 @@
+.suppliers-container {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.suppliers-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 8px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-right: 10px;
+    transition: background-color 0.3s;
+}
+
+.suppliers-button:hover {
+    background-color: #45a049;
+}
+
+.suppliers-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.suppliers-table th,
+.suppliers-table td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 12px;
+}
+
+.suppliers-label {
+    margin-right: 10px;
+}
+
+.suppliers-input {
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    width: calc(100% - 18px);
+}
+
+.suppliers-add-existing {
+    margin-top: 20px;
+}
+
+.suppliers-add-new {
+    margin-top: 20px;
+}
+
+.suppliers-add-new input {
+    width: calc(100% - 18px);
+    margin-bottom: 10px;
+}
+
+.suppliers-add-new label {
+    display: block;
+    margin-bottom: 6px;
+}

@@ -14,7 +14,7 @@ function Suppliers() {
     const [nameToBeSearched, setNameToBeSearched] = useState(null);
     const [searchedSupplier, setSearchedSupplier] = useState(null);
     const [addNewSupplier, setAddNewSupplier] = useState(false);
-    const [createdSupplier, setCreatedSupplier] = useState(null);
+ 
 
     const [name, setName] = useState(null);
     const [contactNo, setContactNo] = useState(null);
@@ -48,18 +48,19 @@ function Suppliers() {
 
     useEffect(() => {
 
-        axios.get(`http://localhost:8080/loadSupplier_Item/${itemID}`)
-            .then(function (response) {
-                setSuppliers(response.data)
-
-
-            })
-            .catch(function (error) {
-                console.log(error)
-            })
+        loadSuppliers();
 
     }, [])
 
+    function loadSuppliers(){axios.get(`http://localhost:8080/loadSupplier_Item/${itemID}`)
+    .then(function (response) {
+        setSuppliers(response.data)
+
+
+    })
+    .catch(function (error) {
+        console.log(error)
+    })}
 
 
     function deleteSupplier_Item(event, supplierID) {
@@ -76,15 +77,18 @@ function Suppliers() {
         };
 
 
+
         console.log("item id : " + itemID + "supplierID :" + supplierID)
         axios.delete("http://localhost:8080/supplierDoesntProvideThisItem", { data: data })
             .then(function (response) {
                 console.log(response);
-                removeSupplierById(supplierID)
+                loadSuppliers();
+                alert("supplier removed from item succesfuuly")
 
             })
             .catch(function (error) {
                 console.log(error);
+                alert(error)
             });
 
     }
@@ -95,7 +99,7 @@ function Suppliers() {
         if (suppliers != null) {
             for (a = 0; a < suppliers.length; a++) {
                 if (suppliers[a].supplierID == searchedSupplier.supplierID) {
-                    console.log("supplier already added for this item")
+                    alert("supplier has already been added for this item")
                     return;
                 }
             }
@@ -111,13 +115,8 @@ function Suppliers() {
         axios.post("http://localhost:8080/saveSupplier_Item", data)
             .then(function (respnose) {
                 console.log(respnose)
-                if (suppliers == null) {
-
-                    setSuppliers([searchedSupplier])
-                }
-                else {
-                    setSuppliers(prevSuppliers => [...prevSuppliers, searchedSupplier])
-                }
+               loadSuppliers();
+               alert("supplier added to this item succesfully!")
             })
             .catch(function (error) {
                 console.log(error)
@@ -141,6 +140,7 @@ function Suppliers() {
             })
             .catch(function (error) {
                 console.log(error);
+                alert("couldn't find supplier")
                 setSearchedSupplier(null)
             })
 
@@ -159,76 +159,92 @@ function Suppliers() {
         axios.post("http://localhost:8080/addNewSupplier",data)
         .then(function(response){
             console.log(response)
+            alert("Supplier Created. Now search this supplier and add to item")
         }).catch(function(error){
             console.log(error)
+            alert(error+". Check if the supplier already exists ")
         })
+        
 
     }
     function inputChange() { }
 
 
 
-    return (<div>
-        <button onClick={() => console.log(suppliers == null)}>gf</button>
-        <table>
-            <thead>
-                <tr>
-                    <th>Supplier ID</th>
-                    <th>supplier name</th>
-                    <th>contact_No</th>
-                    <th>email</th>
-                    <th>address</th>
-                </tr>
-            </thead>
-            <tbody>
-                {suppliers && suppliers.map((supplier) => {
-
-                    return (
-
+    return (<div className="container">
+    <div className="row">
+        <div className="col">
+            <button className="btn btn-primary" onClick={() => console.log(suppliers == null)}>Click me</button>
+        </div>
+    </div>
+    <div className="row mt-3">
+        <div className="col">
+            <table className="table">
+                <thead>
+                    <tr>
+                        <th style={{ color: '#4CAF50' }}>Supplier ID</th>
+                        <th style={{ color: '#4CAF50' }}>Supplier Name</th>
+                        <th style={{ color: '#4CAF50' }}>Contact No</th>
+                        <th style={{ color: '#4CAF50' }}>Email</th>
+                        <th style={{ color: '#4CAF50' }}>Address</th>
+                        <th style={{ color: '#4CAF50' }}>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {suppliers && suppliers.map((supplier) => (
                         <tr key={supplier.supplierID}>
-                            <td><label>{supplier.supplierID} </label></td>
-                            <td ><input value={supplier.name} onChange={inputChange} /></td>
-                            <td><input value={supplier.contactNo} onChange={inputChange} /></td>
-                            <td><input value={supplier.email} onChange={inputChange} /></td>
-                            <td ><input value={supplier.address} onChange={inputChange} /></td>
-                            <td><button onClick={(event) => deleteSupplier_Item(event, supplier.supplierID)}>this supplier no longer provide this item</button></td>
-
+                            <td>{supplier.supplierID}</td>
+                            <td><input className="form-control" value={supplier.name} onChange={inputChange} /></td>
+                            <td><input className="form-control" value={supplier.contactNo} onChange={inputChange} /></td>
+                            <td><input className="form-control" value={supplier.email} onChange={inputChange} /></td>
+                            <td><input className="form-control" value={supplier.address} onChange={inputChange} /></td>
+                            <td><button className="btn btn-danger" onClick={(event) => deleteSupplier_Item(event, supplier.supplierID)}>Remove</button></td>
                         </tr>
-                    )
-                })}
-            </tbody>
-        </table>
-        <div>
-            <label>add an existing supplier</label>
-            <input placeholder="Search By Name" onChange={handleNameToBeSearched} />
-            <button onClick={handleSearchedSupplier}>search</button>
-            <br></br>
-            {searchedSupplier ? (<div>
-
-                <label>{searchedSupplier.name}</label><br></br>
-                <label>{searchedSupplier.contactNo}</label><br></br>
-                <label>{searchedSupplier.email}</label><br></br>
-                <label>{searchedSupplier.address}</label>  </div>) : (
-                <label>supplier not found</label>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div className="row mt-3">
+        <div className="col">
+            <label>Add an existing supplier</label>
+            <div className="input-group">
+                <input className="form-control" placeholder="Search By Name" onChange={handleNameToBeSearched} />
+                <button className="btn btn-primary" onClick={handleSearchedSupplier}>Search</button>
+            </div>
+            <br />
+            {searchedSupplier ? (
+                <div>
+                    <label style={{ color: '#007BFF' }}>{searchedSupplier.name}</label><br />
+                    <label style={{ color: '#007BFF' }}>{searchedSupplier.contactNo}</label><br />
+                    <label style={{ color: '#007BFF' }}>{searchedSupplier.email}</label><br />
+                    <label style={{ color: '#007BFF' }}>{searchedSupplier.address}</label>
+                </div>
+            ) : (
+                <label style={{ color: '#DC3545' }}>Supplier not found</label>
             )}
-
-            <button onClick={addSearchedSupplierToItem}>add</button>
+            <button className="btn btn-success" onClick={addSearchedSupplierToItem}>Add</button>
         </div>
-        <div><br></br>
-            <button onClick={handleAddNewSupplier}>create a new supplier</button><button onClick={handleCreateSupplier}>add this supplier</button>
-            {addNewSupplier &&
-                <>
-                    <label>name</label>
-                    <input onChange={handleName} /><br></br>
-                    <label>contactNo</label><input onChange={handleContactNo} /><br></br>
-                    <label>email</label><input onChange={handleEmail} /><br></br>
-                    <label>address</label><input onChange={handleAddress} />
-
-                </>}
+    </div>
+    <div className="row mt-3">
+        <div className="col">
+            <button className="btn btn-primary" onClick={handleAddNewSupplier}>Create a new supplier</button>
+            <button className="btn btn-success ms-3" onClick={handleCreateSupplier}>Add This Supplier</button>
+            {addNewSupplier && (
+                <div className="mt-3">
+                    <label style={{ color: '#007BFF' }}>Name</label>
+                    <input className="form-control mb-2" onChange={handleName} />
+                    <label style={{ color: '#007BFF' }}>Contact No</label>
+                    <input className="form-control mb-2" onChange={handleContactNo} />
+                    <label style={{ color: '#007BFF' }}>Email</label>
+                    <input className="form-control mb-2" onChange={handleEmail} />
+                    <label style={{ color: '#007BFF' }}>Address</label>
+                    <input className="form-control" onChange={handleAddress} />
+                </div>
+            )}
         </div>
-
-
-    </div>)
+    </div>
+</div>)
 }
 
 export default Suppliers;

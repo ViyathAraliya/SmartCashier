@@ -40,7 +40,11 @@ public class SupplierServiceImpl implements SupplierService{
         return supplieRepository.findByName(name);
     }
 
-    public Supplier savSupplier(Supplier supplier) throws Exception{
+    public Supplier saveSupplier(Supplier supplier) throws Exception{
+        String name=supplier.getName();
+        if(supplieRepository.existsByName(name)){
+            throw new Exception("an supplier already exist with this name");
+        }
         return supplieRepository.save(supplier);
     }
 

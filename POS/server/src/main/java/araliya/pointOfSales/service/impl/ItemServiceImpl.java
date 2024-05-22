@@ -60,6 +60,10 @@ public class ItemServiceImpl implements ItemService {
             Supplier supplier = itemDto.getSupplier();
             Long qty = itemDto.getQty();
 
+            if(itemRepository.existsByName(itemName)){
+                throw new Exception("an item with this name alrwady exists");
+            }
+
             if (itemName == null) {
                 throw new Exception("itemName is null in the DTO. Please check the DTO.");
             }
@@ -81,7 +85,7 @@ public class ItemServiceImpl implements ItemService {
             if (qty == null) {
                 throw new Exception("qty is null in the DTO. Please check the DTO.");
             }
-            Long categoryID = itemCategory.getCatagoryID();
+            Long categoryID = itemCategory.getCategoryID();
             String categoryName = itemCategory.getName();
 
             Boolean categoryIdIsNull = categoryID == null;
@@ -117,7 +121,7 @@ public class ItemServiceImpl implements ItemService {
                         throw new Exception("no such category by provided name");
                     }
                     itemCategory = itemCategoryFoundByDescription;
-                    categoryID = itemCategoryFoundByID.getCatagoryID();
+                    categoryID = itemCategoryFoundByID.getCategoryID();
                 }
             } else if (categoryNameIsNull) {
                 if (itemExistsByID) {
@@ -138,8 +142,8 @@ public class ItemServiceImpl implements ItemService {
                 if (itemCategory == null) {
                     throw new Exception("error in retriving categoru(repo returns null)");
                 }
-                if (itemCategory.getCatagoryID()
-                        .equals(itemCategoryFoundByDescription.getCatagoryID()) == false) {
+                if (itemCategory.getCategoryID()
+                        .equals(itemCategoryFoundByDescription.getCategoryID()) == false) {
                     throw new Exception("category ID doesnt match the category name");
                 }
             }
@@ -223,19 +227,17 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
-    public List<Item> loadItems(){
+    public List<Item> loadItems() throws Exception{
         return itemRepository.findAll();
     }
 
-    public String updateItem(Item item){
+    public String updateItem(Item item) throws Exception{
 
-        System.out.println(item.getItemID());
-        
-       if(itemRepository.save(item)!=null){
-        return "item update";
-       }
-       else{return "failed to update item";}
-
+      /*  if(itemRepository.updateItem(item)==false){
+            throw new Exception("error in saving item");
+               }
+             return "item saved succesfully";  */
+             throw new Exception("unimplimented");
         }
     
 }

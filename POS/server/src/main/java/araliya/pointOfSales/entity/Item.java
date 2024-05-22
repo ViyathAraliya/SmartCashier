@@ -35,7 +35,7 @@ public class Item {
     private Long unitPrice;
 
     @ManyToOne
-    @JoinColumn(name="catogryID")
+    @JoinColumn(name="categoryID")
     private ItemCategory category;
 
     @Transient

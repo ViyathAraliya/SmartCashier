@@ -42,7 +42,7 @@ public class SupplierController {
     @PostMapping("/addNewSupplier")
     public ResponseEntity<Supplier> postMethodName(@RequestBody Supplier supplier) {
         try{
-        Supplier savedSupplier=supplierService.savSupplier(supplier);
+        Supplier savedSupplier=supplierService.saveSupplier(supplier);
         if(savedSupplier==null){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
