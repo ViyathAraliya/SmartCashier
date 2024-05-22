@@ -8,10 +8,11 @@ function UserItems() {
 
     //to put
 
-
+    
+    const[name,setName]=useState(null);
     const [unit, setUnit] = useState(null);
     const [unitPrice, setUnitPrice] = useState(null);
-    const [category, setCategory] = useState(null);
+    const [categoryID, setCategoryID] = useState(null);
 
     const [categories, setCategories] = useState(null);
 
@@ -34,37 +35,71 @@ function UserItems() {
             })
     }, []
     );
-    function handleUnit(event) {
-        setUnit(event.target.value);
+
+    function handleName(event,id){
+     const tempUpdatedName={"id":id, "name":event.target.value}
+     console.log("checking "+id);
+        setName(tempUpdatedName);
     }
-    function handleUnitPrice(event) {
-        setUnitPrice(event.target.value);
+    function handleUnit(event,id) {
+        const tempUpdatedUnit={"id":id, "unit":event.target.value}
+        setUnit(tempUpdatedUnit);
     }
-    function handleCategory(event) { setCategory(event.target.value); }
+    function handleUnitPrice(event,id) {
+        const tempUpdatedUnitPrice={"id":id, "unitPrice":event.target.value}
+        setUnitPrice(tempUpdatedUnitPrice);
+    }
+    function handleCategory(event,id) { 
+        const tempUpdatedCategoryID={"id":id, "categoryID":event.target.value}
+        console.log("Selected category ID:", tempUpdatedCategoryID.categoryID,"itemid ",id);
+        setCategoryID(tempUpdatedCategoryID); }
   
 
 
     function updateItem(item){
-        
-        console.log("itemID" +item.itemID);
+      const itemID=item.itemID;
+      let validated_name=item.name;
+      let validated_unit=item.unit;
+      let validated_unitPrice=item.unitPrice;
+      let validated_categoryID=item.category.categoryID;
+
+      if(name!=null && itemID==name.id){
+        validated_name=name.name
+      }
+      if(unit!=null && itemID==unit.id){
+        validated_unit=unit.unit
+      }
+      if(unitPrice!=null && itemID==unitPrice.id){
+        validated_unitPrice=unitPrice.unitPrice
+      }
+      if(categoryID!=null && itemID==categoryID.id){
+        validated_categoryID=categoryID.categoryID
+      }
+
+//console.log("id",itemID,"name",validated_name,"unit",validated_unit,"unitprice",validated_unitPrice,)
         const data={
-        "itemID": item.itemID,
-        "name": item.name,
-        "unit": unit,
-        "unitPrice": unitPrice,
-        "category": {"categoryID":category.catagoryID,
-            "name":category.name
-        }
+            
+                "itemID":itemID,
+                "name": validated_name,
+                "unit": validated_unit,
+                "unitPrice":validated_unitPrice,
+                  "categoryID": validated_categoryID,     
 
     }
-        
+        console.log("jjj"+categoryID)
         axios.put("http://localhost:8080/updateItems",data)
         .then(function(response){
             console.log(response);
+            alert("item updated succesfully")
         })
         .catch( function(error){
             console.log(error)
+            alert(error)
         })
+setName(null) 
+setUnit(null)
+setUnitPrice(null)
+setCategoryID(null)
 
         console.log("testing id :" +data.itemID)
     }
@@ -89,13 +124,13 @@ function UserItems() {
                     <tr key={item.itemID}>
                         <td>{item.itemID}</td>
 
-                        <td>{item.name} </td>
-                        <td><input value={item.unit} onChange={handleUnit} /></td>
-                        <td><input value={item.unitPrice} onChange={handleUnitPrice}/></td>
-                        <td><select onChange={handleCategory}>
-                            <option value={item.category?.catagoryID}>{item.category?.name}</option>
+                        <td><input placeholder={item.name} onChange={(event)=>handleName(event,item.itemID)}/></td>
+                        <td><input placeholder={item.unit} onChange={(event)=>handleUnit(event,item.itemID)} /></td>
+                        <td><input placeholder={item.unitPrice} onChange={(event)=>handleUnitPrice(event,item.itemID)}/></td>
+                        <td><select onChange={(event)=>handleCategory(event,item.itemID)} >
+                        <option value={item.category.categoryID}>{item.category.name}</option> 
                             {categories && categories.map((category) => (
-                                <option key={category.categoryID} value={category.id}>{category.name}</option>
+                                <option key={category.categoryID} value={category.categoryID}>{category.name}</option>
                             ))}</select></td>
                             <td>
                                 <li><Link to={`/suppliers?itemID=${item.itemID}`}>Suppliers</Link>

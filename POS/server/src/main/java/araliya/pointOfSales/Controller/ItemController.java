@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 import araliya.pointOfSales.dtos.ItemDto;
+import araliya.pointOfSales.dtos.UpdateItemDto;
 import araliya.pointOfSales.entity.Item;
 import araliya.pointOfSales.service.ItemService;
 
@@ -62,9 +63,9 @@ public class ItemController {
     }
 
     @PutMapping("/updateItems")
-    public ResponseEntity<String> putMethodName( @RequestBody Item item) {
+    public ResponseEntity<String> putMethodName( @RequestBody UpdateItemDto updateItemDto) {
        try{
-            String msg=itemService.updateItem(item);
+            String msg=itemService.updateItem(updateItemDto);
             System.out.println("fine");
             return ResponseEntity.ok().body(msg);
        }catch(Exception e){

@@ -10,6 +10,7 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import araliya.pointOfSales.dtos.ItemDto;
+import araliya.pointOfSales.dtos.UpdateItemDto;
 import araliya.pointOfSales.embeddedIDs.Supplier_Item_ID;
 import araliya.pointOfSales.entity.Item;
 import araliya.pointOfSales.entity.ItemCategory;
@@ -43,8 +44,6 @@ public class ItemServiceImpl implements ItemService {
     @Autowired
     private Supplier_Item_Repository supplier_Item_Repository;
 
-
-
     public String saveItem(ItemDto itemDto) throws Exception {// for a new item,
         // "If an item exists, then a stock exists; otherwise, there is no stock."
         TransactionDefinition def = new DefaultTransactionDefinition();
@@ -54,13 +53,13 @@ public class ItemServiceImpl implements ItemService {
             // validating dto
             String itemName = itemDto.getName();
             String unit = itemDto.getUnit();
-            Long unitPrice=itemDto.getUnitPrice();
+            Long unitPrice = itemDto.getUnitPrice();
             ItemCategory itemCategory = itemDto.getCategory();
             Stock stock = itemDto.getStock();
             Supplier supplier = itemDto.getSupplier();
             Long qty = itemDto.getQty();
 
-            if(itemRepository.existsByName(itemName)){
+            if (itemRepository.existsByName(itemName)) {
                 throw new Exception("an item with this name alrwady exists");
             }
 
@@ -70,7 +69,7 @@ public class ItemServiceImpl implements ItemService {
             if (unit == null) {
                 throw new Exception("unit is null in the DTO. Please check the DTO.");
             }
-            if(unitPrice==null){
+            if (unitPrice == null) {
                 throw new Exception("unit price is null");
             }
             if (itemCategory == null) {
@@ -227,17 +226,17 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
-    public List<Item> loadItems() throws Exception{
+    public List<Item> loadItems() throws Exception {
         return itemRepository.findAll();
     }
 
-    public String updateItem(Item item) throws Exception{
+    public String updateItem(UpdateItemDto updateItemDto) throws Exception {
 
-      /*  if(itemRepository.updateItem(item)==false){
-            throw new Exception("error in saving item");
-               }
-             return "item saved succesfully";  */
-             throw new Exception("unimplimented");
+        if (itemRepository.updateItem(updateItemDto) == 0) {
+            throw new Exception("couldnt save");
         }
-    
+        return "item update succesfully";
+
+    }
+
 }
