@@ -1,0 +1,40 @@
+
+._createItem{
+  background-color: #f8a7a7; 
+}
+.supplierForItem_createItems {
+    display: flex;
+  }
+  
+  .createWithANewSupplier {
+    flex: 1;
+    background-color: #f8a7a7; 
+    padding: 20px; 
+  }
+  
+  .createItemWithAnExistingSupplier_CreateItem {
+    flex: 1;
+    background-color: #f8a7a7; 
+    margin-left: 20px;
+    padding: 20px;
+  }
+  
+  
+
+.tables_createItems {
+    display: flex;
+  }
+  
+  .itemTable_createItems {
+    flex: 1;
+    background-color: #8dffa0; 
+    padding: 20px;
+  }
+  
+  .supplierTable_createItems {
+    flex: 1;
+    background-color: #95b4fa; 
+    margin-left: 20px; 
+    padding: 20px; 
+  }
+  

@@ -16,3 +16,4 @@ function Stock(){
         </div>
     )
 }
+export default Stock;

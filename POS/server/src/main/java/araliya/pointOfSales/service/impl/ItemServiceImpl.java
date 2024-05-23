@@ -189,27 +189,35 @@ public class ItemServiceImpl implements ItemService {
             // validating and saving Supplier_Item
             Long supplierID = supplier.getSupplierID();
             boolean supplierIdIsNull = supplierID == null;
-            boolean supplierExists;
-            if (supplierIdIsNull) {
-                boolean nameExists = supplierRepository.existsByName(itemName);
-                if (nameExists) {
+
+            String supplierName = supplier.getName();
+
+            if (supplierIdIsNull == false) {
+                if (supplier.getName() != null || supplier.getContactNo() != null || supplier.getAddress() != null
+                        || supplier.getEmail() != null) {
                     throw new Exception(
-                            "a supplier is already registered with this name. Check from supplier service if the existing supplier is the right one and send supplier again with that id. Else register this supplier under a different name");
+                            "Error : you have provided supplier ID. Therefore send other fields as null because they are not needed");
                 }
-                if (supplier.getEmail() == null || supplier.getAddress() == null || supplier.getContactNo() == null) {
-                    throw new Exception("lacking essential supplier details.");
+                if (supplierRepository.existsById(supplierID) == false) {
+                    throw new Exception("no supplier with provided if");
                 }
 
-                supplier = supplierRepository.save(supplier);
-
-            } else {
-                supplierExists = supplierRepository.existsById(supplierID);
-                if (supplierExists == false) {
-                    throw new Exception("A supplier with the given id does not exist");
+            } else if (supplierName == null) {
+                throw new Exception("both supplierID and supplier name are null");
+            } else if (supplierRepository.existsByName(supplierName)) {
+                throw new Exception("A supplier already exists with this name. In this case send just the supplierID");
+            } else if (supplier.getContactNo() == null || supplier.getEmail() == null
+                    || supplier.getAddress()== null) {
+                throw new Exception("important supplier credentials are missing");
+            }
+            if (supplierIdIsNull) {
+                if(supplierName.length()==0){
+                    throw new Exception("no supplier id or name provided");
                 }
+                supplierID = supplierRepository.save(supplier).getSupplierID();
             }
 
-            Supplier_Item_ID supplier_Item_ID = new Supplier_Item_ID(item.getItemID(), supplier.getSupplierID());
+            Supplier_Item_ID supplier_Item_ID = new Supplier_Item_ID(item.getItemID(), supplierID);
             Supplier_Item supplier_Item = new Supplier_Item(supplier_Item_ID, item, supplier);
             supplier_Item_Repository.save(supplier_Item);// this line error
 
