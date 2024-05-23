@@ -11,4 +11,5 @@ public interface SupplierService {
     List<Supplier> getSuppliersByItemID(Long itemID)  throws Exception;
     Supplier findByName(String name) throws Exception;
     Supplier saveSupplier(Supplier supplier) throws Exception;
+    List<Supplier> loadSuppliers() throws Exception;
 }

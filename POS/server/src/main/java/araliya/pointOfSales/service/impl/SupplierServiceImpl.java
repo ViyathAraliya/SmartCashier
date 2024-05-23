@@ -48,6 +48,12 @@ public class SupplierServiceImpl implements SupplierService{
         return supplieRepository.save(supplier);
     }
 
+    public List<Supplier> loadSuppliers() throws Exception{
+    
+        return supplieRepository.findAll();
+
+    }
+
     }
     
 

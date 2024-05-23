@@ -64,7 +64,8 @@ public class WebSecurityConfiguration {
         .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(unauthorizedHandler))
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(auth -> auth.requestMatchers("auth/login/**","/loadItems","/loadCategories","/updateItems","/loadSuppliersByItem",
-        "loadSupplier_Item/{id}","/supplierDoesntProvideThisItem","/findSupplierByName/**","saveSupplier_Item/**","/addNewSupplier","/saveItem","/saveCategory").permitAll()
+        "loadSupplier_Item/{id}","/supplierDoesntProvideThisItem","/findSupplierByName/**","saveSupplier_Item/**","/addNewSupplier"
+        ,"/saveItem","/saveCategory","/loadSuppliers").permitAll()
         .anyRequest().authenticated());
 
         httpSecurity.authenticationProvider(authenticationProvider());

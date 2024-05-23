@@ -6,6 +6,9 @@ function Item() {
     const [unit, setUnit] = useState(null);
     const [unitPrice, setUnitPrice] = useState(null);
     const [categories, setCategories] = useState(null);
+    const [suppliers, setSuppliers] = useState(null);
+    const [items,setItems]=useState(null);
+
     const [categoryID, setCategoryID] = useState(null);
     //  const [categoryName,setCategoryName]=useState(null);
     const [supplierName, setSupplierName] = useState(null);
@@ -14,7 +17,7 @@ function Item() {
     const [supplierAddress, setSupplierAddress] = useState(null)
     const [qty, setQty] = useState(null)
 
-    useEffect(()=>{
+    useEffect(() => {
         axios.get("http://localhost:8080/loadCategories")
             .then(function (response) {
                 setCategories(response.data)
@@ -22,7 +25,28 @@ function Item() {
             .catch(function (error) {
                 console.log(error);
             })
-    },[])
+
+        axios.get("http://localhost:8080/loadSuppliers")
+            .then(function (respnose) {
+                setSuppliers(respnose.data)
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
+            axios.get("http://localhost:8080/loadItems")
+            .then(function (respnose) {
+                setItems(respnose.data)
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
+
+
+
+    }
+
+
+        , [])
 
     const handleName = (event) => {
         setItemName(event.target.value);
@@ -65,7 +89,29 @@ function Item() {
 
 
     function saveItemWithNewSupplier() {
-        console.log("catID "+categoryID)
+        if (categoryID == null) {
+            alert("please select a category")
+            
+            return
+        }
+
+        for(let i=0;i<suppliers.length;i++){
+            if(suppliers[i].name==supplierName){
+                console.log("Supplier name already exists in the databse."
+                +" Add this via 'Create Item with an existing supplier' section ");
+                alert("Supplier name already exists in the databse."
+                +" Add this via 'Create Item with an existing supplier' section ")
+                return;
+            }
+        }
+
+        for(let i=0;i<items.length;i++){
+            if(items[i].name==name){
+                alert("item already exists in the databse.");
+                return;
+            }
+        }
+        console.log("catID " + categoryID)
         const data = {
             "itemID": null,
             "name": name,
@@ -104,50 +150,52 @@ function Item() {
             })
             .catch(function (error) {
                 console.log(error)
-                alert(error)
+                //alert(" Make sure you are creating a new item and a new supplier. Not existsing ones")
             })
     }
 
 
     return (<div><div className="createItemWithNewSupplier">
+        <h1>create an item with a new supplier</h1>
         <div className="itemBasics">
-            <h3>Add an item</h3>
 
-            <label for="name">Name</label>
-            <input id="name" onChange={handleName} />
 
-            <label for="unit">unit</label>
-            <input id="unit" onChange={handleUnit} />
+            <label className="itemName">Name</label>
+            <input className="itemName" onChange={handleName} />
 
-            <label for="unitPrice">unit price</label>
-            <input id="unitPrice" onChange={handleUnitPrice} />
+            <label className="itemUnit">unit</label>
+            <input className="itemUnit" onChange={handleUnit} />
 
-            <label for="categoryID">category</label>
+            <label className="itemUnitPrice">unit price</label>
+            <input className="itemUnitPrice" onChange={handleUnitPrice} />
+
+            <label className="categoryID">category</label>
             <select onChange={handleCategoryID}>
+                <option value={null}>-select a category</option>
 
                 {categories && categories.map((category) => (
                     <option key={category.categoryID} value={category.categoryID}>{category.name}</option>
                 ))}</select>
 
 
-            <label for="qty_on_hand">qty_on_hand</label>
-            <input id="qty_on_hand" onChange={handleQty} />
+            <label className="qty_on_hand">qty_on_hand</label>
+            <input className="qty_on_hand" onChange={handleQty} />
         </div>
 
         <div className="supplierForItem">
             <h3>supplier details</h3>
 
-            <label for="supplierName">supplier name</label>
-            <input for="supplierName" onChange={handleSupplierName}></input>
+            <label className="supplierName">supplier name</label>
+            <input className="supplierName" onChange={handleSupplierName}></input>
 
-            <label for="contactNo">Contact Number</label>
-            <input id="contactNo" onChange={handleSupplierContactNo} />
+            <label className="contactNo">Contact Number</label>
+            <input className="contactNo" onChange={handleSupplierContactNo} />
 
-            <label for="email">Email</label>
-            <input id="email" onChange={handleSupplierEmail} />
+            <label className="email">Email</label>
+            <input className="email" onChange={handleSupplierEmail} />
 
-            <label for="address">Address</label>
-            <input id="address" onChange={handleSupplierAddress} />
+            <label className="address">Address</label>
+            <input className="address" onChange={handleSupplierAddress} />
         </div>
         <button onClick={saveItemWithNewSupplier}>save</button>
     </div>

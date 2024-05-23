@@ -1,5 +1,7 @@
 package araliya.pointOfSales.Controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 
@@ -52,7 +56,17 @@ public class SupplierController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
     
-    
-    
 }
+
+@GetMapping("/loadSuppliers")
+public ResponseEntity<List<Supplier>> getMethodName() throws Exception{
+    try{
+        List<Supplier> suppliers=supplierService.loadSuppliers();
+        return ResponseEntity.ok().body(suppliers);
+    }catch(Exception e){
+        System.out.println(e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+}
+
 }
