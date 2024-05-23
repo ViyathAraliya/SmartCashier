@@ -7,6 +7,7 @@ import Items from './customerComponents/Items';
 import UserItems from './userComponents/UserItems';
 import Suppliers from './userComponents/Suppliers';
 import Item from './userComponents/Item';
+import Category from './userComponents/Category';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
        <Route path="/userItems" element={<UserItems/>}/>
        <Route path="/suppliers" element={<Suppliers/>}/>
        <Route path="/Item" element={<Item/>}/>
+       <Route path="/Category" element={<Category/>}/>
        </Routes>
        </BrowserRouter>
     </div>

@@ -8,10 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import araliya.pointOfSales.dtos.CategoryDto;
+import araliya.pointOfSales.embeddedIDs.Supplier_Item_ID;
 import araliya.pointOfSales.entity.ItemCategory;
 import araliya.pointOfSales.service.CategoryService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,14 +28,19 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @PostMapping("/saveCategory") // save new item
-    public ResponseEntity<String> postMethodName(@RequestBody ItemCategory itemCategory) {
-        try {
+    public ResponseEntity<String> postMethodName(@RequestBody CategoryDto categoryDto) {
+        try {System.out.println(777);
+            ItemCategory itemCategory=new ItemCategory();
+            itemCategory.setCategoryID(categoryDto.getCategoryID());
+            itemCategory.setName(categoryDto.getName());
+
             String msg = categoryService.saveCategory(itemCategory);
             return ResponseEntity.ok(msg);
             // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("failed
             // to save item");
 
         } catch (Exception e) {
+            System.out.println(999);
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             e.printStackTrace(pw);
@@ -53,4 +61,13 @@ public class CategoryController {
         }
 
     }
+
+    //@DeleteMapping("deleteCategory")
+
+    /*  @DeleteMapping("supplierDoesntProvideThisItem")
+    public ResponseEntity<Void> deleteSupplier_Items(@RequestBody Supplier_Item_ID supplier_Item_ID) {
+        try {*/
+
+    
+
 }
