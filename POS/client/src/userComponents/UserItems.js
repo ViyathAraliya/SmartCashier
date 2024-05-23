@@ -86,7 +86,7 @@ function UserItems() {
                   "categoryID": validated_categoryID,     
 
     }
-        console.log("jjj"+categoryID)
+       // console.log("jjj"+categoryID)
         axios.put("http://localhost:8080/updateItems",data)
         .then(function(response){
             console.log(response);

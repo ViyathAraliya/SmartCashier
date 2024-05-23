@@ -40,13 +40,20 @@ function Item() {
             .catch(function (error) {
                 console.log(error)
             })
-
-
-
     }
 
 
         , [])
+
+        function loadItems(){
+            axios.get("http://localhost:8080/loadItems")
+            .then(function (respnose) {
+                setItems(respnose.data)
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
+        }
 
     const handleName = (event) => {
         setItemName(event.target.value);
@@ -147,6 +154,7 @@ function Item() {
             .then(function (response) {
                 console.log(response)
                 alert("item saved succesfully")
+                loadItems();
             })
             .catch(function (error) {
                 console.log(error)
@@ -198,6 +206,30 @@ function Item() {
             <input className="address" onChange={handleSupplierAddress} />
         </div>
         <button onClick={saveItemWithNewSupplier}>save</button>
+    </div>
+    <div className="itemTable">
+        <table>
+            <thead>
+                <tr>
+                    <th>itemID</th>
+                    <th>item name</th>
+                    <th>unit</th>
+                    <th>unit price</th>
+                    <th>category</th>
+                </tr>
+            </thead>
+            <tbody>
+                {items && items.map((item)=>(
+                    <tr>
+                    <td>{item.itemID}</td>
+                    <td>{item.name}</td>
+                    <td>{item.unit}</td>
+                    <td>{item.unit_price}</td>
+                    <td>{item.category.name}</td>
+                    </tr>
+                ))}
+            </tbody>
+        </table>
     </div>
 
     </div>);
