@@ -11,6 +11,7 @@ function Home() {
       <li><Link to="/item">create Item</Link></li>
       <li><Link to="/Category">Manage Categories</Link></li>
       <li><Link to="/stock">Manage Stock</Link></li>
+      <li><Link to="/transaction">Make a Transaction</Link></li>
       </div>
     );
   }

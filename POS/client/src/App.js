@@ -9,6 +9,7 @@ import Suppliers from './adminComponents/Suppliers';
 import Item from './adminComponents/Item';
 import Category from './adminComponents/Category';
 import Stock from './adminComponents/Stock';
+import Transaction from './cashierComponents/Transaction';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
        <Route path="/Item" element={<Item/>}/>
        <Route path="/Category" element={<Category/>}/>
        <Route path="/stock" element={<Stock/>}/>
+       <Route path="/transaction" element={<Transaction/>}/>
        </Routes>
        </BrowserRouter>
     </div>
