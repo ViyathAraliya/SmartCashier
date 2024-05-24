@@ -66,6 +66,7 @@ public class Supplier_Item_Controller {
         }
 
         catch(Exception e){
+            System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 
         }
