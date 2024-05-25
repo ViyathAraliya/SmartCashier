@@ -22,7 +22,7 @@ function Transaction() {
 
     useEffect(() => {
        
-       // loadCustomers()
+        loadCustomers()
         loadItems()
         loadStocks()
 
@@ -33,11 +33,14 @@ function Transaction() {
 
     }, [cart])
 
+    useEffect(()=>{
+        handleCustomerExist()
+    },[phoneNumber])
   
     function handlePhonenNumber(event) {
         setPhoneNumber(event.target.value)
     }
-/*
+
     function handleCustomerExist() {
         for (let i = 0; i < customers.length; i++) {
             if (phoneNumber == customers[i].phoneNumber) {
@@ -56,7 +59,7 @@ function Transaction() {
                 console.log(error)
             })
     }
-*/
+//
 
     function handleTotal() {
 
@@ -177,6 +180,7 @@ function Transaction() {
             console.log(respnose)
             setCart([])
             loadStocks()
+            loadCustomers()
             alert("transaction succesful")
         })
         .catch(function(error){
@@ -189,21 +193,14 @@ function Transaction() {
 
     if(stocks==null || items==null){return <div>loading ...</div>}
     return (
-        /* trasnactionDto:    private Customer customer;
-                              private List<Transaction_Item_Dto> transaction_Item_dtos;//with transactionID null
-                              private  Date dateTime;
-                              private Long totalAmount;
-  
-      transaction_itemDto:    private Long itemID;
-                              private Long qty;
-                              private Long amount;*/
+       
         <>
             <h1>Transaction</h1>
             <div className="basicDetails_transaction">
                 <label>customer phone number</label>
                 <input placeholder="optional" onChange={handlePhonenNumber} />{' '}
                 <label>customer status : </label>{' '}
-                {customerExist ? (<input value={"customer exists"} readOnly style={{ color: 'lightcoral', backgroundColor: '#f5f5f5', border: 'none' }} />)
+                {customerExist ? (<input value={"customer exists"} readOnly style={{ color: '#008000', backgroundColor: '#f5f5f5', border: 'none' }} />)
                     : (<input value={"new customer"} readOnly style={{ color: 'lightcoral', backgroundColor: '#f5f5f5', border: 'none' }} />)} <br></br>
                 <div className="addItem_transcation">
 
