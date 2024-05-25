@@ -163,6 +163,7 @@ public class TransactionServiceImpl implements TransactionService{
                 transaction_Item_Dto.setItemID(transaction_Item.getItem().getItemID());
                 transaction_Item_Dto.setAmount(transaction_Item.getAmount());
                 transaction_Item_Dto.setQty(transaction_Item.getQty());
+                transaction_Item_Dtos.add(transaction_Item_Dto);
             }
             transactionDto.setTransaction_Item_dtos(transaction_Item_Dtos);
             transactionDtos.add(transactionDto);
