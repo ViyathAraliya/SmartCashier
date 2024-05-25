@@ -1,5 +1,8 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '../css/Stock.css'
+
 
 function Stock() {
     const [searchStockByItemID, setSearchStockByItemID] = useState(null)
@@ -87,7 +90,7 @@ setAddQty(0)
                 <input onChange={handleSearchStockByID} />
                 <button onClick={search}> search</button>
 
-                <table className="searchedStock">
+                <table className="table table-striped">
                     <thead>
                         <tr>
                             <th>stockID</th>
@@ -113,11 +116,13 @@ setAddQty(0)
 
             </div>
             <div className="stockTable_stock">
-                <table className="stocks">
+                <label>stocks</label>
+                <table className="table table-striped">
                     <thead>
                         <tr>
                             <th>stockID</th>
                             <th>ItemID</th>
+                            <th>item name</th>
                             <th>unit</th>
                             <th>qty_on_hand</th>
 
@@ -128,6 +133,7 @@ setAddQty(0)
                             <tr key={stock.stockID}>
                                 <td>{stock.stockID}</td>
                                 <td>{stock.item.itemID}</td>
+                                <td>{stock.item.name}</td>
                                 <td>{stock.unit}</td>
                                 <td>{stock.qty_on_hand}</td>
                             </tr>

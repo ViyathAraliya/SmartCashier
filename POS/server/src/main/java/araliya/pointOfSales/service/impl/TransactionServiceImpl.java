@@ -16,10 +16,12 @@ import araliya.pointOfSales.dtos.Transaction_Item_Dto;
 import araliya.pointOfSales.embeddedIDs.Transaction_Item_ID;
 import araliya.pointOfSales.entity.Customer;
 import araliya.pointOfSales.entity.Item;
+import araliya.pointOfSales.entity.Stock;
 import araliya.pointOfSales.entity.Transaction;
 import araliya.pointOfSales.entity.Transaction_Item;
 import araliya.pointOfSales.repository.CustomerRepository;
 import araliya.pointOfSales.repository.ItemRepository;
+import araliya.pointOfSales.repository.StockRepository;
 import araliya.pointOfSales.repository.TransactionRepository;
 import araliya.pointOfSales.repository.Transaction_Item_Repository;
 import araliya.pointOfSales.service.TransactionService;
@@ -41,6 +43,9 @@ public class TransactionServiceImpl implements TransactionService{
     @Autowired
     private CustomerRepository customerRepository;
 
+    @Autowired
+    private StockRepository stockRepository;
+
 
 
     @Override
@@ -51,9 +56,9 @@ public class TransactionServiceImpl implements TransactionService{
             
             Customer customer=transactionDto.getCustomer();
             String phoneNumber=customer.getPhoneNumber();
-            if(customer.getPhoneNumber()==null){
+         /*   if(customer.getPhoneNumber()==null){
                 throw new Exception("phone number is null");
-            }
+            }*/
             
             if(customerRepository.existsByPhoneNumber(phoneNumber)){
                 customer=customerRepository.findByPhoneNumber(phoneNumber);
@@ -101,6 +106,21 @@ public class TransactionServiceImpl implements TransactionService{
                 transaction_Item.setAmount(transaction_Item_dto.getAmount());
                
                 transaction_Item_Repository.save(transaction_Item);
+                /*updating stock */
+                Long qty=transaction_Item.getQty();
+                Long stockID=item.getItemID();//because itemID=stockID in by service 
+                Stock stock=stockRepository.findById(stockID).orElse(null);
+                if(stock==null){
+                    throw new Exception("error in retrievong stock");
+                }
+                Long updatedQty=stock.getQty_on_hand()-qty;
+                stock.setQty_on_hand(updatedQty);
+                Stock updatedStock=stockRepository.save(stock);
+                if(updatedStock==null){
+                    throw new Exception("error in updating stock");
+                }
+
+
               
             }
             
