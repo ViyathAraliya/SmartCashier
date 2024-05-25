@@ -1,5 +1,9 @@
-.searchAndAddQty_stock {
-    background-color: #4CAF50;}
-    .stockTable_stock{
-        background-color: #eb93da 
-    }
+.main_stock {
+    display: flex;
+    flex-direction: row;
+}
+
+.searchAndAddQty_stock,
+.stockTable_stock {
+    margin-right: 20px; 
+}

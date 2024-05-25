@@ -81,13 +81,14 @@ setAddQty(0)
 
     }
 
-    return (
-        <div>
-            <h2>Manage Stocks</h2>
+    return (<div className="mm">
+         <h2>Manage Stocks</h2>
+        <div className="main_stock">
+           
             <div className="searchAndAddQty_stock">
 
                 <label >search by itemID</label>
-                <input onChange={handleSearchStockByID} />
+                <input onChange={handleSearchStockByID} placeholder="search stock to add a quatity" />
                 <button onClick={search}> search</button>
 
                 <table className="table table-striped">
@@ -141,7 +142,7 @@ setAddQty(0)
                     </tbody>
                 </table>
             </div>
-        </div>
+        </div></div>
     )
 }
 export default Stock;

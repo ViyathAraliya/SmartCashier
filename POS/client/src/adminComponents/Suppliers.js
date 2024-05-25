@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 
@@ -42,9 +43,7 @@ function Suppliers() {
     }
 
 
-    function removeSupplierById(id) {
-        setSuppliers(prevSuppliers => prevSuppliers.filter(supplier => supplier.supplierID !== id));
-    }
+   
 
     useEffect(() => {
 
@@ -159,6 +158,7 @@ function Suppliers() {
         axios.post("http://localhost:8080/addNewSupplier",data)
         .then(function(response){
             console.log(response)
+           
             alert("Supplier Created. Now search this supplier and add to item")
         }).catch(function(error){
             console.log(error)
@@ -171,80 +171,77 @@ function Suppliers() {
 
 
 
-    return (<div className="container">
-    <div className="row">
-        <div className="col">
-            <button className="btn btn-primary" onClick={() => console.log(suppliers == null)}>Click me</button>
-        </div>
-    </div>
-    <div className="row mt-3">
-        <div className="col">
-            <table className="table">
+    return (<div>
+        <h3>suppliers for itemID :{itemID}</h3>
+       
+        <div>
+            <table>
                 <thead>
                     <tr>
-                        <th style={{ color: '#4CAF50' }}>Supplier ID</th>
-                        <th style={{ color: '#4CAF50' }}>Supplier Name</th>
-                        <th style={{ color: '#4CAF50' }}>Contact No</th>
-                        <th style={{ color: '#4CAF50' }}>Email</th>
-                        <th style={{ color: '#4CAF50' }}>Address</th>
-                        <th style={{ color: '#4CAF50' }}>Action</th>
+                        <th>Supplier ID</th>
+                        <th>Supplier Name</th>
+                        <th>Contact No</th>
+                        <th>Email</th>
+                        <th>Address</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     {suppliers && suppliers.map((supplier) => (
                         <tr key={supplier.supplierID}>
                             <td>{supplier.supplierID}</td>
-                            <td><input className="form-control" value={supplier.name} onChange={inputChange} /></td>
-                            <td><input className="form-control" value={supplier.contactNo} onChange={inputChange} /></td>
-                            <td><input className="form-control" value={supplier.email} onChange={inputChange} /></td>
-                            <td><input className="form-control" value={supplier.address} onChange={inputChange} /></td>
-                            <td><button className="btn btn-danger" onClick={(event) => deleteSupplier_Item(event, supplier.supplierID)}>Remove</button></td>
+                            <td><input value={supplier.name} onChange={inputChange} /></td>
+                            <td><input value={supplier.contactNo} onChange={inputChange} /></td>
+                            <td><input value={supplier.email} onChange={inputChange} /></td>
+                            <td><input value={supplier.address} onChange={inputChange} /></td>
+                            <td><button onClick={(event) => deleteSupplier_Item(event, supplier.supplierID)}>Remove</button></td>
                         </tr>
                     ))}
                 </tbody>
             </table>
         </div>
-    </div>
-    <div className="row mt-3">
-        <div className="col">
-            <label>Add an existing supplier</label>
-            <div className="input-group">
-                <input className="form-control" placeholder="Search By Name" onChange={handleNameToBeSearched} />
-                <button className="btn btn-primary" onClick={handleSearchedSupplier}>Search</button>
+        <div>
+            <br></br>
+            <h3>Add an existing supplier to item</h3>
+            <div>
+                <input placeholder="Search By Name" onChange={handleNameToBeSearched} />
+                <button onClick={handleSearchedSupplier}>Search</button>
             </div>
             <br />
             {searchedSupplier ? (
                 <div>
-                    <label style={{ color: '#007BFF' }}>{searchedSupplier.name}</label><br />
-                    <label style={{ color: '#007BFF' }}>{searchedSupplier.contactNo}</label><br />
-                    <label style={{ color: '#007BFF' }}>{searchedSupplier.email}</label><br />
-                    <label style={{ color: '#007BFF' }}>{searchedSupplier.address}</label>
+                    <label>{searchedSupplier.name}</label><br />
+                    <label>{searchedSupplier.contactNo}</label><br />
+                    <label>{searchedSupplier.email}</label><br />
+                    <label>{searchedSupplier.address}</label>
+                    <button onClick={addSearchedSupplierToItem}>Add</button>
                 </div>
+                 
             ) : (
-                <label style={{ color: '#DC3545' }}>Supplier not found</label>
+                <label>{''}</label>
             )}
-            <button className="btn btn-success" onClick={addSearchedSupplierToItem}>Add</button>
-        </div>
-    </div>
-    <div className="row mt-3">
-        <div className="col">
-            <button className="btn btn-primary" onClick={handleAddNewSupplier}>Create a new supplier</button>
-            <button className="btn btn-success ms-3" onClick={handleCreateSupplier}>Add This Supplier</button>
+           
+        </div><br></br>
+        <div>
+
+            <button onClick={handleAddNewSupplier}>Create a new supplier</button>
+            
             {addNewSupplier && (
-                <div className="mt-3">
-                    <label style={{ color: '#007BFF' }}>Name</label>
-                    <input className="form-control mb-2" onChange={handleName} />
-                    <label style={{ color: '#007BFF' }}>Contact No</label>
-                    <input className="form-control mb-2" onChange={handleContactNo} />
-                    <label style={{ color: '#007BFF' }}>Email</label>
-                    <input className="form-control mb-2" onChange={handleEmail} />
-                    <label style={{ color: '#007BFF' }}>Address</label>
-                    <input className="form-control" onChange={handleAddress} />
+                <div>
+                    <label>Name</label>
+                    <input onChange={handleName} />
+                    <label>Contact No</label>
+                    <input onChange={handleContactNo} />
+                    <label>Email</label>
+                    <input onChange={handleEmail} />
+                    <label>Address</label>
+                    <input onChange={handleAddress} />
+                    <button onClick={handleCreateSupplier}>Add This Supplier to suppliers</button>
                 </div>
             )}
         </div>
     </div>
-</div>)
+    )
 }
 
 export default Suppliers;

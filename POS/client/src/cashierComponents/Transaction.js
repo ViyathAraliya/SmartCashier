@@ -187,7 +187,9 @@ function Transaction() {
             console.log(error)
             alert(error)
         })
-
+setSearchedItem(null)//new
+setCart([])
+setTransaction_itemDtos([])
 
     }
 
