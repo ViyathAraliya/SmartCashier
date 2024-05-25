@@ -63,7 +63,7 @@ public class TransactionServiceImpl implements TransactionService{
                 throw new Exception("phone number is null");
             }*/
             
-            if(customerRepository.existsByPhoneNumber(phoneNumber)){
+            if(phoneNumber!=null && customerRepository.existsByPhoneNumber(phoneNumber) ){
                 customer=customerRepository.findByPhoneNumber(phoneNumber);
             }
             else{
