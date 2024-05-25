@@ -12,6 +12,7 @@ function Home() {
       <li><Link to="/Category">Manage Categories</Link></li>
       <li><Link to="/stock">Manage Stock</Link></li>
       <li><Link to="/transaction">Make a Transaction</Link></li>
+      <li><Link to ="/ViewTransactions">View Transcations</Link></li>
       </div>
     );
   }

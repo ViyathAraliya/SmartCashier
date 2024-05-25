@@ -1,6 +1,7 @@
 package araliya.pointOfSales.service.impl;
 
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -45,6 +46,8 @@ public class TransactionServiceImpl implements TransactionService{
 
     @Autowired
     private StockRepository stockRepository;
+
+
 
 
 
@@ -135,5 +138,36 @@ public class TransactionServiceImpl implements TransactionService{
 
         }
     }
+
+  public  List<TransactionDto> loadTransactions() throws Exception{
+
     
+        List<Transaction> transactions= transactionRepository.findAll();
+      
+        List<TransactionDto> transactionDtos=new ArrayList<>();
+        
+
+        for(int i=0;i<transactions.size();i++){
+            Transaction transaction=transactions.get(i);
+            TransactionDto transactionDto=new TransactionDto();
+            transactionDto.setTransactionID(transaction.getTransactionID());
+            transactionDto.setCustomer(transaction.getCustomer());
+            transactionDto.setDateTime(transaction.getDateTime());
+            transactionDto.setTotalAmount(transaction.getTotalAmount());
+
+            List<Transaction_Item> transaction_Items=transaction_Item_Repository.findAllByTransactionId(transaction.getTransactionID());
+            List<Transaction_Item_Dto> transaction_Item_Dtos=new ArrayList<>();
+            for(int j=0;j<transaction_Items.size();j++){
+                Transaction_Item transaction_Item=transaction_Items.get(j);
+                Transaction_Item_Dto transaction_Item_Dto=new Transaction_Item_Dto();
+                transaction_Item_Dto.setItemID(transaction_Item.getItem().getItemID());
+                transaction_Item_Dto.setAmount(transaction_Item.getAmount());
+                transaction_Item_Dto.setQty(transaction_Item.getQty());
+            }
+            transactionDto.setTransaction_Item_dtos(transaction_Item_Dtos);
+            transactionDtos.add(transactionDto);
+    }
+    return transactionDtos;
+    
+}
 }
