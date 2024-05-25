@@ -1,0 +1,37 @@
+.basicDetails_transaction {
+    background-color: #f0f0f0;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.addItem_transcation {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+}
+
+.itemAndCartTable {
+    display: flex;
+    justify-content: space-between;
+}
+
+.miniTableItem_transaction {
+    width: 45%; 
+    background-color: bisque;
+}
+
+.cart {
+    width: 45%; 
+    background-color: aqua;
+}.ItemsAndStocks {
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    gap: 20px;
+}
+
+.itemTable_transcation, .stocksTable_transaction {
+    width: 100%; 
+}
+
+  

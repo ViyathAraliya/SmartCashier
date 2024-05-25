@@ -6,6 +6,7 @@ function Stock() {
     const [searchedStock, setSearchedStock] = useState(null)
     const [stocks, setStocks] = useState(null)
     const [addQty, setAddQty] = useState(0)
+    
 
 
     useEffect(() => {
