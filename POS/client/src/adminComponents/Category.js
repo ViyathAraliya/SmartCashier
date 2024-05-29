@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useAuth } from "../utils/AuthContext";
 
 function Category() {
 
@@ -8,21 +9,20 @@ function Category() {
     const [categories, setCategories] = useState(null)
 
 
-    useEffect(() => {
-        axios.get("http://localhost:8080/loadCategories")
-            .then(function (response) {
-                setCategories(response.data)
-                console.log(response)
-            })
-            .catch(function (error) {
-                console.log(error)
-            })
+const {isAuthenticated,jwtToken}=useAuth();
+const config={
+    headers :{ Authorization:`Bearer ${jwtToken}`}
+}
 
-    }, [])
+
+    useEffect(() => {if(isAuthenticated){
+        loadCateories();
+
+}}, [isAuthenticated])
 
 
     function loadCateories() {
-        axios.get("http://localhost:8080/loadCategories")
+        axios.get("http://localhost:8080/loadCategories",config)
             .then(function (response) {
                 setCategories(response.data)
                 console.log(response)
@@ -56,7 +56,7 @@ function Category() {
             "categoryID": category.categoryID,
             "name": validated_name
         }
-        axios.post("http://localhost:8080/saveCategory", data)
+        axios.post("http://localhost:8080/saveCategory", data,config)
             .then(function (response) {
                 console.log(response)
                 loadCateories();
@@ -75,7 +75,7 @@ function Category() {
             "name": creatCategoryName
         }
 
-        axios.post("http://localhost:8080/saveCategory", data)
+        axios.post("http://localhost:8080/saveCategory", data,config)
             .then(function (response) {
                 console.log(response)
                 loadCateories();

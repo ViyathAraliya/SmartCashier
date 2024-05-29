@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useAuth } from "../utils/AuthContext";
 
 
 
@@ -21,7 +22,9 @@ function Suppliers() {
     const [contactNo, setContactNo] = useState(null);
     const [email, setEmail] = useState(null);
     const [address, setAddress] = useState(null);
+    const{isAuthenticated,jwtToken}=useAuth();
 
+    const config={headers :{ Authorization:`Bearer ${jwtToken}`}}
 
     const handleName = (event) => {
         setName(event.target.value);
@@ -46,12 +49,12 @@ function Suppliers() {
    
 
     useEffect(() => {
-
+if(isAuthenticated){
         loadSuppliers();
+}
+    }, [isAuthenticated])
 
-    }, [])
-
-    function loadSuppliers(){axios.get(`http://localhost:8080/loadSupplier_Item/${itemID}`)
+    function loadSuppliers(){axios.get(`http://localhost:8080/loadSupplier_Item/${itemID}`,config)
     .then(function (response) {
         setSuppliers(response.data)
 
@@ -78,7 +81,7 @@ function Suppliers() {
 
 
         console.log("item id : " + itemID + "supplierID :" + supplierID)
-        axios.delete("http://localhost:8080/supplierDoesntProvideThisItem", { data: data })
+        axios.post("http://localhost:8080/supplierDoesntProvideThisItem",  data ,config)
             .then(function (response) {
                 console.log(response);
                 loadSuppliers();
@@ -111,7 +114,7 @@ function Suppliers() {
             }
         }
 
-        axios.post("http://localhost:8080/saveSupplier_Item", data)
+        axios.post("http://localhost:8080/saveSupplier_Item", data,config)
             .then(function (respnose) {
                 console.log(respnose)
                loadSuppliers();
@@ -132,7 +135,7 @@ function Suppliers() {
 
     function handleSearchedSupplier(event) {
         event.preventDefault();
-        axios.get(`http://localhost:8080/findSupplierByName/${nameToBeSearched}`).
+        axios.get(`http://localhost:8080/findSupplierByName/${nameToBeSearched}`,config).
             then(function (respnose) {
                 console.log(respnose);
                 setSearchedSupplier(respnose.data)
@@ -155,7 +158,7 @@ function Suppliers() {
             "address": address,
         }
 
-        axios.post("http://localhost:8080/addNewSupplier",data)
+        axios.post("http://localhost:8080/addNewSupplier",data,config)
         .then(function(response){
             console.log(response)
            

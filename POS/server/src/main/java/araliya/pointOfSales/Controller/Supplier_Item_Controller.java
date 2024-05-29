@@ -41,7 +41,7 @@ public class Supplier_Item_Controller {
         }
     }
 
-    @DeleteMapping("supplierDoesntProvideThisItem")
+    @PostMapping("supplierDoesntProvideThisItem")
     public ResponseEntity<Void> deleteSupplier_Items(@RequestBody Supplier_Item_ID supplier_Item_ID) {
         try {
            

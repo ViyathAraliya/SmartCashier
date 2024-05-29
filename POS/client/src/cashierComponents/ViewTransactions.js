@@ -2,21 +2,28 @@ import axios from "axios";
 import { useEffect, useState } from "react"
 import "../css/viewTransaction.css"
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useAuth } from "../utils/AuthContext";
 
 function ViewTransactions() {
     const [transactionDtos, setTransactionDtos] = useState(null)
     const [transaction_itemDtoss, setTransaction_itemDtos] = useState(null)
+
+    const {isAuthenticated,jwtToken}=useAuth();
+const config={
+    headers :{ Authorization:`Bearer ${jwtToken}`}
+}
+
    
-    useEffect(() => {
+    useEffect(() => {if(isAuthenticated){
         loadTranscation();
 
-    }, [])
+    }}, [isAuthenticated])
 
 
 
     
     function loadTranscation() {
-        axios.get("http://localhost:8080/loadTransactions")
+        axios.get("http://localhost:8080/loadTransactions",config)
             .then(function (respnose) {
                 setTransactionDtos(respnose.data)
 

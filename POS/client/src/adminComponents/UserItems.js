@@ -1,12 +1,12 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../utils/AuthContext";
 
 function UserItems() {
 
     const [items, setItems] = useState(null);
 
-    //to put
 
     
     const[name,setName]=useState(null);
@@ -16,9 +16,14 @@ function UserItems() {
 
     const [categories, setCategories] = useState(null);
 
+    const{isAuthenticated, jwtToken}=useAuth();
 
-    useEffect(() => {
-        axios.get("http://localhost:8080/loadItems")
+    const config={
+        headers :{ Authorization:`Bearer ${jwtToken}`}
+    }
+
+    useEffect(() => {if(isAuthenticated){
+        axios.get("http://localhost:8080/loadItems",config)
             .then(function (response) {
                 setItems(response.data)
             })
@@ -26,14 +31,14 @@ function UserItems() {
                 console.log(error);
             });
 
-        axios.get("http://localhost:8080/loadCategories")
+        axios.get("http://localhost:8080/loadCategories",config)
             .then(function (response) {
                 setCategories(response.data)
             })
             .catch(function (error) {
                 console.log(error);
             })
-    }, []
+    }}, [isAuthenticated]
     );
 
     function handleName(event,id){
@@ -87,7 +92,7 @@ function UserItems() {
 
     }
        // console.log("jjj"+categoryID)
-        axios.put("http://localhost:8080/updateItems",data)
+        axios.put("http://localhost:8080/updateItems",data,config)
         .then(function(response){
             console.log(response);
             alert("item updated succesfully")

@@ -2,6 +2,7 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/Stock.css'
+import { useAuth } from "../utils/AuthContext";
 
 
 function Stock() {
@@ -10,14 +11,18 @@ function Stock() {
     const [stocks, setStocks] = useState(null)
     const [addQty, setAddQty] = useState(0)
     
+    const {isAuthenticated,jwtToken}=useAuth();
+    const config={
+        headers :{ Authorization:`Bearer ${jwtToken}`}
+    }
+    
 
-
-    useEffect(() => {
+    useEffect(() => {if(isAuthenticated){
         loadStocks()
-    }, [])
+    }}, [isAuthenticated])
 
     function loadStocks() {
-        axios.get("http://localhost:8080/loadStocks")
+        axios.get("http://localhost:8080/loadStocks",config)
             .then(function (respnose) {
                 setStocks(respnose.data)
 
@@ -65,7 +70,7 @@ function Stock() {
             "unit": searchedStock.unit,
             "qty_on_hand": qty
         }
-        axios.put("http://localhost:8080/updateStock", data)
+        axios.put("http://localhost:8080/updateStock", data,config)
             .then(function (respnose) {
                 console.log(respnose)
                 loadStocks();

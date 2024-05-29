@@ -63,9 +63,7 @@ public class WebSecurityConfiguration {
         httpSecurity.csrf(csrf ->csrf.disable())
         .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(unauthorizedHandler))
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authorizeHttpRequests(auth -> auth.requestMatchers("auth/login/**","/loadItems","/loadCategories","/updateItems","/loadSuppliersByItem",
-        "loadSupplier_Item/{id}","/supplierDoesntProvideThisItem","/findSupplierByName/**","saveSupplier_Item/**","/addNewSupplier"
-        ,"/saveItem","/saveCategory","/loadSuppliers","/loadStocks","/updateStock","/loadCustomers","/saveTransaction","/loadTransactions").permitAll()
+        .authorizeHttpRequests(auth -> auth.requestMatchers("auth/login/**").permitAll()
         .anyRequest().authenticated());
 
         httpSecurity.authenticationProvider(authenticationProvider());
@@ -73,7 +71,9 @@ public class WebSecurityConfiguration {
         httpSecurity.addFilterBefore(authenticationJwAuthTokenFilter(), UsernamePasswordAuthenticationFilter.class);
          return httpSecurity.build();
 
-
+/*"/loadItems","/loadCategories","/updateItems","/loadSuppliersByItem",
+        "loadSupplier_Item/{id}","/supplierDoesntProvideThisItem","/findSupplierByName/**","saveSupplier_Item/**","/addNewSupplier"
+        ,"/saveItem","/saveCategory","/loadSuppliers","/loadStocks","/updateStock","/loadCustomers","/saveTransaction","/loadTransactions" */
     }
 
 }

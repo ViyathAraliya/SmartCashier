@@ -2,6 +2,7 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import "../css/Transaction.css"
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useAuth } from "../utils/AuthContext";
 
 
 function Transaction() {
@@ -18,15 +19,19 @@ function Transaction() {
     const [qty, setQty] = useState(0)
     const [total, setTotal] = useState(0);
     const [transaction_Item_dtos, setTransaction_itemDtos] = useState([])
-
+    const {isAuthenticated,jwtToken}=useAuth();
+    const config={
+        headers :{ Authorization:`Bearer ${jwtToken}`}
+    }
+    
 
     useEffect(() => {
-       
+       if(isAuthenticated){
         loadCustomers()
         loadItems()
         loadStocks()
 
-    }, [])
+}}, [isAuthenticated])
 
     useEffect(() => {
         handleTotal()
@@ -51,7 +56,7 @@ function Transaction() {
     }
 
     function loadCustomers() {
-        axios.get("http://localhost:8080/loadCustomers")
+        axios.get("http://localhost:8080/loadCustomers",config)
             .then(function (respnose) {
                 setCustomers(respnose.data)
             })
@@ -76,7 +81,7 @@ function Transaction() {
 
     }
     function loadStocks() {
-        axios.get("http://localhost:8080/loadStocks")
+        axios.get("http://localhost:8080/loadStocks",config)
             .then(function (respnose) {
                 setStocks(respnose.data)
 
@@ -86,7 +91,7 @@ function Transaction() {
             })
     }
     function loadItems() {
-        axios.get("http://localhost:8080/loadItems")
+        axios.get("http://localhost:8080/loadItems",config)
             .then(function (respnose) {
                 setItems(respnose.data)
             })
@@ -175,7 +180,7 @@ function Transaction() {
             "totalAmount":total
         }
 
-        axios.post("http://localhost:8080/saveTransaction",data)
+        axios.post("http://localhost:8080/saveTransaction",data,config)
         .then(function(respnose){
             console.log(respnose)
             setCart([])

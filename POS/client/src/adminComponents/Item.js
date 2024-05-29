@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import "../css/createItems.css"
+import { useAuth } from "../utils/AuthContext";
 
 function Item() {
     const [name, setItemName] = useState(null);
@@ -19,8 +20,14 @@ function Item() {
     const [supplierAddress, setSupplierAddress] = useState(null)
     const [qty, setQty] = useState(null)
 
-    useEffect(() => {
-        axios.get("http://localhost:8080/loadCategories")
+
+    const{isAuthenticated, jwtToken}=useAuth();
+
+    const config={
+        headers :{ Authorization:`Bearer ${jwtToken}`}
+    }
+    useEffect(() => {if(isAuthenticated){
+        axios.get("http://localhost:8080/loadCategories",config)
             .then(function (response) {
                 setCategories(response.data)
             })
@@ -30,13 +37,13 @@ function Item() {
 
         loadSuppliers();
         loadItems();
-    }
+       }   }
 
 
-        , [])
+        , [isAuthenticated])
 
     function loadSuppliers() {
-        axios.get("http://localhost:8080/loadSuppliers")
+        axios.get("http://localhost:8080/loadSuppliers",config)
             .then(function (respnose) {
                 setSuppliers(respnose.data)
             })
@@ -45,7 +52,7 @@ function Item() {
             })
     }
     function loadItems() {
-        axios.get("http://localhost:8080/loadItems")
+        axios.get("http://localhost:8080/loadItems",config)
             .then(function (respnose) {
                 setItems(respnose.data)
             })
@@ -153,7 +160,7 @@ function Item() {
         }
 
 
-        axios.post("http://localhost:8080/saveItem", data)
+        axios.post("http://localhost:8080/saveItem", data,config)
             .then(function (response) {
                 console.log(response)
                 alert("item saved succesfully")
@@ -227,7 +234,7 @@ function Item() {
         }
 
 
-        axios.post("http://localhost:8080/saveItem", data)
+        axios.post("http://localhost:8080/saveItem", data,config)
             .then(function (response) {
                 console.log(response)
                 alert("item saved succesfully")
