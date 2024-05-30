@@ -52,5 +52,10 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(Long id) {
         
     }
+
+    @Override
+    public boolean userEmpty() throws Exception{
+        return userRepository.count()==0;
+    }
     
 }

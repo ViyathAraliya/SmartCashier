@@ -11,4 +11,6 @@ import araliya.pointOfSales.entity.User;
 public interface UserRepository extends JpaRepository<User,Long>{
 
     Optional<User> findUserByName(String name);
+
+    long count(); 
 } 

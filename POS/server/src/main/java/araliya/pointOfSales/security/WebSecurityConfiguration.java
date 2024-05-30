@@ -1,6 +1,7 @@
 package araliya.pointOfSales.security;
 
 
+import org.aspectj.internal.lang.annotation.ajcDeclareAnnotation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,15 +17,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-
+import araliya.pointOfSales.repository.UserRepository;
 import araliya.pointOfSales.security.jwt.AuthEntryPoint;
 import araliya.pointOfSales.security.jwt.AuthTokenFilter;
+import araliya.pointOfSales.service.UserService;
 
 @Configuration
 @EnableMethodSecurity
 public class WebSecurityConfiguration {
     @Autowired
     private AuthEntryPoint unauthorizedHandler;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
@@ -60,10 +65,12 @@ public class WebSecurityConfiguration {
     }
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity)throws Exception{
+       
+       if(userRepository.count()==0){
         httpSecurity.csrf(csrf ->csrf.disable())
         .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(unauthorizedHandler))
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authorizeHttpRequests(auth -> auth.requestMatchers("auth/login/**").permitAll()
+        .authorizeHttpRequests(auth -> auth.requestMatchers("auth/login/**","/createUser","/isUserEmpty").permitAll()
         .anyRequest().authenticated());
 
         httpSecurity.authenticationProvider(authenticationProvider());
@@ -74,6 +81,16 @@ public class WebSecurityConfiguration {
 /*"/loadItems","/loadCategories","/updateItems","/loadSuppliersByItem",
         "loadSupplier_Item/{id}","/supplierDoesntProvideThisItem","/findSupplierByName/**","saveSupplier_Item/**","/addNewSupplier"
         ,"/saveItem","/saveCategory","/loadSuppliers","/loadStocks","/updateStock","/loadCustomers","/saveTransaction","/loadTransactions" */
-    }
+    }else{  httpSecurity.csrf(csrf ->csrf.disable())
+        .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(unauthorizedHandler))
+        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authorizeHttpRequests(auth -> auth.requestMatchers("auth/login/**","/isUserEmpty").permitAll()
+        .anyRequest().authenticated());
+
+        httpSecurity.authenticationProvider(authenticationProvider());
+
+        httpSecurity.addFilterBefore(authenticationJwAuthTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+         return httpSecurity.build();}}
+
 
 }

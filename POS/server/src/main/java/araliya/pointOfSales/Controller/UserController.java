@@ -14,6 +14,8 @@ import araliya.pointOfSales.service.UserService;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -28,7 +30,7 @@ public class UserController {
             if (savedUser == null) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("error in saving User");
             }
-         return   ResponseEntity.ok("user saved succesfully");
+            return ResponseEntity.ok("user saved succesfully");
         } catch (Exception e) {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
@@ -39,4 +41,13 @@ public class UserController {
 
     }
 
+    @GetMapping("/isUserEmpty")
+    public ResponseEntity<Boolean> getMethodName() {
+        try {
+            Boolean b = userService.userEmpty();
+            return ResponseEntity.ok().body(b);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }

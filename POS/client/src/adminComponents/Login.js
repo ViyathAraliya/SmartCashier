@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../utils/AuthContext";
@@ -7,11 +7,25 @@ import axios from "axios";
 const Login = () => {
   const [userName, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  
 
   const { login } = useAuth();
   const navigate = useNavigate();
 
 
+
+useEffect(()=>{
+  axios.get("http://localhost:8080/isUserEmpty")
+  .then(function(response){
+    if((response.data)==true){
+      navigate("/register");
+    }
+  })
+  .catch(function(error){
+    console.log(error);
+  })
+
+},[])
 
 
 

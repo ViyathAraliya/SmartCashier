@@ -14,6 +14,7 @@ public interface UserService {
     User createUser(User user);
     User updateUser(Long id, User user) throws Exception;
     void deleteUser(Long id);
+    boolean userEmpty() throws Exception;
 
     
 }

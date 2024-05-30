@@ -14,7 +14,7 @@ import ViewTransactions from './cashierComponents/ViewTransactions';
 import ProtectedRoute from './utils/ProtectedRoute';
 import { AuthProvider } from './utils/AuthContext';
 import CreateUser from './adminComponents/CreateUser';
-
+import Register from './adminComponents/Register';
 function App() {
   return (
    <AuthProvider>
@@ -33,6 +33,7 @@ function App() {
             <Route path="/ViewTransactions" element={<ViewTransactions />} />
           </Route>
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
         </Routes>
         </BrowserRouter>
 
