@@ -13,6 +13,7 @@ import Transaction from './cashierComponents/Transaction';
 import ViewTransactions from './cashierComponents/ViewTransactions';
 import ProtectedRoute from './utils/ProtectedRoute';
 import { AuthProvider } from './utils/AuthContext';
+import CreateUser from './adminComponents/CreateUser';
 
 function App() {
   return (
@@ -22,7 +23,7 @@ function App() {
           <Route element={<ProtectedRoute />} >
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
-
+              <Route path="/createUSer" element={<CreateUser/>}></Route>
             <Route path="/userItems" element={<UserItems />} />
             <Route path="/suppliers" element={<Suppliers />} />
             <Route path="/Item" element={<Item />} />
